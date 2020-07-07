@@ -1,0 +1,91 @@
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ASCII Report
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Name: DCM4_21092018_3
+Data Name: 
+Operator: 
+Date: 2018/10/25
+Info: 
+Misc: 
+Misc (separated): 
+Details: 
+Scans: 14775
+Start RT (min): 5.75
+Stop RT (min): 54.99667
+Barcode: 
+------------------------------
+
+NAME: DCM4_21092018_3
+TYPE: MSD
+------------------------------
+Integrated Chromatogram Area: 0.0
+Integrated Background Area: 0.0
+Integrated Peak Area: 63011744.88744
+
+
+PEAK LIST OVERVIEW
+------------------------------
+[#]	RT (Min)	RI	Start RT (Min)	Stop RT (Min)	Tailing	Width (at 50% peak height by inflection points)	Integrated Area	S/N	Leading	Tailing	Scan #	Purity	Integrator	Detector	Model	m/z ...
+[1]	8.11	0.0	8.04667	8.3	1.3869	0.02532	10286066.51845	15.89743	0.72103	1.3869	709	1.0	Integrator Trapezoid: TIC	Peak Detector First Derivative		115.1 55.05 59.0 114.1 84.0 ...
+[2]	9.84	0.0	9.76667	9.97667	1.25235	0.02217	21433445.49958	59.72343	0.7985	1.25235	1228	1.0	Integrator Trapezoid: TIC	Peak Detector First Derivative		59.05 100.1 101.1 129.1 55.05 ...
+[3]	10.71333	0.0	10.62667	10.79	1.09029	0.01993	9102915.63086	29.83338	0.91719	1.09029	1490	1.0	Integrator Trapezoid: TIC	Peak Detector First Derivative		55.1 56.1 69.1 70.1 57.1 ...
+[4]	11.49333	0.0	11.42333	11.58667	1.29884	0.02202	5133289.32892	14.70285	0.76992	1.29884	1724	1.0	Integrator Trapezoid: TIC	Peak Detector First Derivative		59.05 55.1 114.1 111.1 101.1 ...
+[5]	13.61	0.0	13.56667	13.68	0.94583	0.0203	3152404.51008	9.43366	1.05728	0.94583	2359	1.0	Integrator Trapezoid: TIC	Manual		55.1 57.1 69.1 70.1 56.1 ...
+[6]	15.17333	0.0	15.1	15.33667	1.13694	0.02197	8339024.92635	20.39386	0.87956	1.13694	2828	1.0	Integrator Trapezoid: TIC	Peak Detector First Derivative		191.15 57.1 206.2 192.15 73.95 ...
+[7]	15.45	0.0	15.38667	15.61333	1.00549	0.0203	5564598.4732	16.28502	0.99454	1.00549	2911	1.0	Integrator Trapezoid: TIC	Peak Detector First Derivative		121.1 149.1 194.1 138.1 65.05 ...
+
+
+PEAK INTEGRATION RESULTS
+------------------------------
+[#]	m/z (0 = TIC or SUM XIC))	Integrated Area
+[1]	TIC	10286066.51845
+[2]	TIC	21433445.49958
+[3]	TIC	9102915.63086
+[4]	TIC	5133289.32892
+[5]	TIC	3152404.51008
+[6]	TIC	8339024.92635
+[7]	TIC	5564598.4732
+
+
+SCAN IDENTIFICATION RESULTS
+------------------------------
+Scan identification results are not available.
+
+
+PEAK IDENTIFICATION RESULTS
+------------------------------
+[#]	Name	CAS	MatchFactor	ReverseMatchFactor	Formula	Mol Weight	Probability	Advise	Identifier	Miscellaneous	Comments
+
+
+BACKGROUND INTEGRATION RESULTS
+------------------------------
+Background integration results are not available.
+
+
+CHROMATOGRAM INTEGRATION RESULTS
+------------------------------
+Chromatogram integration results are not available.
+
+
+CHROMATOGRAM IDENTIFICATION RESULTS
+------------------------------
+Chromatogram identification results are not available.
+
+
+PEAK QUANTITATION RESULTS
+------------------------------
+[#]	Name	ChemicalClass	Concentration	ConcentrationUnit	Area	Description	Ion
+
+
+PEAK QUANTITATION SUMMARY
+------------------------------
+RT (Minutes)	Area
+8.11	10286066.51845
+9.84	21433445.49958
+10.71333	9102915.63086
+11.49333	5133289.32892
+13.61	3152404.51008
+15.17333	8339024.92635
+15.45	5564598.4732
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

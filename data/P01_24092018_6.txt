@@ -1,0 +1,130 @@
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ASCII Report
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Name: P01_24092018_6
+Data Name: 
+Operator: 
+Date: 2018/10/25
+Info: 
+Misc: 
+Misc (separated): 
+Details: 
+Scans: 14775
+Start RT (min): 5.75
+Stop RT (min): 54.99667
+Barcode: 
+------------------------------
+
+NAME: P01_24092018_6
+TYPE: MSD
+------------------------------
+Integrated Chromatogram Area: 0.0
+Integrated Background Area: 0.0
+Integrated Peak Area: 289725050.62061
+
+
+PEAK LIST OVERVIEW
+------------------------------
+[#]	RT (Min)	RI	Start RT (Min)	Stop RT (Min)	Tailing	Width (at 50% peak height by inflection points)	Integrated Area	S/N	Leading	Tailing	Scan #	Purity	Integrator	Detector	Model	m/z ...
+[1]	9.8	0.0	9.73667	9.95	1.23838	0.02097	10885537.85213	23.15278	0.80751	1.23838	1216	1.0	Integrator Trapezoid: TIC	Peak Detector First Derivative		59.05 100.15 101.1 55.05 129.1 ...
+[2]	10.67333	0.0	10.60667	10.68667	1.05622	0.02067	1919332.45582	6.98753	0.94677	1.05622	1478	1.0	Integrator Trapezoid: TIC	Manual		84.05 55.1 69.1 56.15 70.1 ...
+[3]	11.45333	0.0	11.41667	11.49	1.38165	0.02117	2296864.16985	7.01611	0.72377	1.38165	1712	1.0	Integrator Trapezoid: TIC	Manual		83.95 59.05 85.95 55.05 114.15 ...
+[4]	15.13333	0.0	15.09333	15.19667	1.28457	0.02372	2057259.12771	4.45329	0.77847	1.28457	2816	1.0	Integrator Trapezoid: TIC	Manual		191.2 84.0 57.1 86.0 51.05 ...
+[5]	15.40667	0.0	15.34667	15.45	0.79831	0.02163	1002115.83724	2.35008	1.25265	0.79831	2898	1.0	Integrator Trapezoid: TIC	Manual		121.15 84.0 85.95 149.1 51.05 ...
+[6]	16.19	0.0	16.08667	16.36667	1.05393	0.02152	173724162.80414	501.08734	0.94883	1.05393	3133	1.0	Integrator Trapezoid: TIC	Peak Detector First Derivative		149.05 177.1 176.05 150.1 65.05 ...
+[7]	17.43333	0.0	17.37333	17.56667	0.95804	0.02032	6794115.99621	18.97272	1.0438	0.95804	3506	1.0	Integrator Trapezoid: TIC	Peak Detector First Derivative		97.15 57.1 55.1 99.15 69.05 ...
+[8]	17.91	0.0	17.86667	17.99333	1.47232	0.03103	2504207.63092	3.81063	0.6792	1.47232	3649	1.0	Integrator Trapezoid: TIC	Manual		91.1 106.1 84.0 65.1 50.95 ...
+[9]	18.15	0.0	18.07667	18.25333	1.2994	0.03557	2999408.55856	4.29431	0.76959	1.2994	3721	1.0	Integrator Trapezoid: TIC	Manual		69.1 84.0 57.05 55.1 56.15 ...
+[10]	18.43333	0.0	18.32333	18.47333	1.0429	0.02293	4306430.91173	7.11946	0.95886	1.0429	3806	1.0	Integrator Trapezoid: TIC	Manual		83.1 97.1 57.05 84.0 69.1 ...
+[11]	20.17667	0.0	20.11667	20.34667	1.01301	0.0616	6336645.10574	6.3945	0.98715	1.01301	4329	1.0	Integrator Trapezoid: TIC	Manual		207.0 57.1 73.1 55.1 60.05 ...
+[12]	20.83333	0.0	20.77667	20.89667	1.2086	0.02237	3744492.83295	10.29785	0.8274	1.2086	4526	1.0	Integrator Trapezoid: TIC	Peak Detector First Derivative		134.1 91.1 106.1 79.05 207.05 ...
+[13]	22.14333	0.0	22.04667	22.30333	0.70719	0.02705	5094946.0591	6.04055	1.41405	0.70719	4919	1.0	Integrator Trapezoid: TIC	Manual		207.05 73.05 208.05 178.05 251.1 ...
+[14]	24.13667	0.0	24.06667	24.27667	1.72418	0.02077	6506525.27979	8.70776	0.57999	1.72418	5517	1.0	Integrator Trapezoid: TIC	Manual		207.05 129.1 57.05 70.15 55.05 ...
+[15]	25.37333	0.0	25.25667	25.41667	1.7338	0.01798	2969144.8776	5.73919	0.57677	1.7338	5888	1.0	Integrator Trapezoid: TIC	Manual		207.05 149.0 73.1 208.0 96.05 ...
+[16]	28.26667	0.0	28.16667	28.39333	0.93452	0.03228	9567751.87318	13.43547	1.07007	0.93452	6756	1.0	Integrator Trapezoid: TIC	Peak Detector First Derivative		207.05 69.1 81.1 208.05 73.1 ...
+[17]	29.49	0.0	29.37333	29.6	1.06372	0.04318	5808098.05811	8.60823	0.9401	1.06372	7123	1.0	Integrator Trapezoid: TIC	Manual		207.05 300.0 73.05 242.0 208.0 ...
+[18]	34.14	0.0	34.00667	34.57667	-0.8938	0.07127	11550588.74429	5.20138	-1.11882	-0.8938	8518	1.0	Integrator Trapezoid: TIC	Manual		207.05 208.0 73.1 190.95 209.0 ...
+[19]	51.81333	0.0	51.48667	52.14667	-1.10325	0.06123	16809967.00678	5.59361	-0.90641	-1.10325	13820	1.0	Integrator Trapezoid: TIC	Manual		207.05 57.15 73.1 208.05 191.0 ...
+[20]	53.66667	0.0	53.46	53.9	0.66678	0.09292	12847455.43878	5.49352	1.49975	0.66678	14376	1.0	Integrator Trapezoid: TIC	Manual		207.05 73.05 57.1 208.05 96.1 ...
+
+
+PEAK INTEGRATION RESULTS
+------------------------------
+[#]	m/z (0 = TIC or SUM XIC))	Integrated Area
+[1]	TIC	10885537.85213
+[2]	TIC	1919332.45582
+[3]	TIC	2296864.16985
+[4]	TIC	2057259.12771
+[5]	TIC	1002115.83724
+[6]	TIC	173724162.80414
+[7]	TIC	6794115.99621
+[8]	TIC	2504207.63092
+[9]	TIC	2999408.55856
+[10]	TIC	4306430.91173
+[11]	TIC	6336645.10574
+[12]	TIC	3744492.83295
+[13]	TIC	5094946.0591
+[14]	TIC	6506525.27979
+[15]	TIC	2969144.8776
+[16]	TIC	9567751.87318
+[17]	TIC	5808098.05811
+[18]	TIC	11550588.74429
+[19]	TIC	16809967.00678
+[20]	TIC	12847455.43878
+
+
+SCAN IDENTIFICATION RESULTS
+------------------------------
+Scan identification results are not available.
+
+
+PEAK IDENTIFICATION RESULTS
+------------------------------
+[#]	Name	CAS	MatchFactor	ReverseMatchFactor	Formula	Mol Weight	Probability	Advise	Identifier	Miscellaneous	Comments
+
+
+BACKGROUND INTEGRATION RESULTS
+------------------------------
+Background integration results are not available.
+
+
+CHROMATOGRAM INTEGRATION RESULTS
+------------------------------
+Chromatogram integration results are not available.
+
+
+CHROMATOGRAM IDENTIFICATION RESULTS
+------------------------------
+Chromatogram identification results are not available.
+
+
+PEAK QUANTITATION RESULTS
+------------------------------
+[#]	Name	ChemicalClass	Concentration	ConcentrationUnit	Area	Description	Ion
+
+
+PEAK QUANTITATION SUMMARY
+------------------------------
+RT (Minutes)	Area
+9.8	10885537.85213
+10.67333	1919332.45582
+11.45333	2296864.16985
+15.13333	2057259.12771
+15.40667	1002115.83724
+16.19	173724162.80414
+17.43333	6794115.99621
+17.91	2504207.63092
+18.15	2999408.55856
+18.43333	4306430.91173
+20.17667	6336645.10574
+20.83333	3744492.83295
+22.14333	5094946.0591
+24.13667	6506525.27979
+25.37333	2969144.8776
+28.26667	9567751.87318
+29.49	5808098.05811
+34.14	11550588.74429
+51.81333	16809967.00678
+53.66667	12847455.43878
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

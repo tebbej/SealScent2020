@@ -1,0 +1,812 @@
+---
+title: "Chemical patterns of colony membership and mother-offspring similarity in Antarctic fur seals are reproducible  - R Code"
+author: "Jonas Tebbe, Emily Humble, Martin A. Stoffel, Lisa Johanna Tewes, Caroline Müller, Jaume Forcada, Barbara Caspers & Joseph Ivan Hoffman"
+date: "April 2020"
+output: 
+  pdf_document:
+        keep_tex: true
+---
+
+
+## Used packages
+Install with "install.packages". After installation, packages can be called with 'library' oder 'require'
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library(GCalignR)
+library(vegan)
+library(readr)
+library(ggplot2)
+library(ggbeeswarm)
+library(tidyverse)
+library(pairwiseAdonis)
+```
+
+
+## Alignment procedure
+```{r eval=FALSE, include=TRUE}
+## Alignment protocol to align a data frame with GCMS peaks for mother-pup pairs and pure pup colonies. For comparability, the six colonies only include pure pup data and thus, need a different alignment protocol, as algorithm properties are inherited within the function but not across functions callings. In consequence, alignment is more accurate for a set data subset.
+
+
+load("RData/objects/seal_raw_dfs.Rdata")
+
+# index correct MP & pup_colony subset
+index_MP <- c(1:61,72:111)
+index_pupcols <- c(51:160)
+
+# Aligning mom-pup colonies
+mom_pup_aligned <- align_chromatograms(data = all_dfs[index_MP], # input data
+                                         rt_col_name = "RT", # retention time variable name 
+                                         rt_cutoff_low = 15, # remove peaks below 15 Minutes
+                                         rt_cutoff_high = 54.7, # remove peaks exceeding 54.7 Minutes
+                                         reference = "P13", # sample with highest overall peak number
+                                         max_linear_shift = 0.05, # Premise 1: max. shift for linear corrections
+                                         max_diff_peak2mean = 0.08, # Premise 2: max. distance of a peak to the mean across samples
+                                         min_diff_peak2peak = 0.03, # Premise 3: min. expected distance between peaks 
+                                         delete_single_peak = T, # delete peaks that are present in just one sample 
+                                         write_output = NULL) # add variable names to write aligned data to text files
+
+# Aligning six pup colonies
+pup_colonies_aligned <- align_chromatograms(data = all_dfs[index_pupcols], # input data
+                                         rt_col_name = "RT", # retention time variable name 
+                                         rt_cutoff_low = 15, # remove peaks below 15 Minutes
+                                         rt_cutoff_high = 54.7, # remove peaks exceeding 54.7 Minutes
+                                         reference = "P13",# sample with highest overall peak number 
+                                         max_linear_shift = 0.05, # Premise 1: max. shift for linear corrections
+                                         max_diff_peak2mean = 0.08, # Premise 2: max. distance of a peak to the mean across samples
+                                         min_diff_peak2peak = 0.03, # Premise 3: min. expected distance between peaks
+                                         delete_single_peak = T, # delete peaks that are present in just one sample 
+                                         write_output = NULL) # add variable names to write aligned data to text files
+
+
+```
+
+
+## Alignment and preliminary data properties
+```{r Alignment and preliminary data properties, message=FALSE, warning=FALSE}
+## Load and view GCalignR alignment objects for GCMS scent data 
+## in two and six breeding beaches
+load("RData/objects/mom_pup_alignment_GCalignR.RData")
+mom_pup_aligned
+
+load("RData/objects/pup_colonies_alignment_GCalignR.RData")
+pup_colonies_aligned
+
+## Load raw information for all samples containing 
+## raw peaks and calculate mean peak number
+load("RData/objects/seal_raw_dfs.Rdata")
+
+individual_peak_number <- NULL
+for (i in 1:length(seal_dfs.list)) {
+  individual_peak_number[i] <- length(seal_dfs.list[[i]]$RT)
+}
+
+mean_ind_peaks <- mean(individual_peak_number)
+sd_ind_peaks <- sd(individual_peak_number)
+cat("\n", "\n", "Mean peaks:", as.character(mean_ind_peaks), "\n", "Peak SD:", 
+    as.character(sd_ind_peaks))
+```
+
+
+## NMDS scaling of mother-pup alignment data
+```{r NMDS scaling of mother-pup alignment data, eval=FALSE, include=TRUE}
+load("RData/objects/mom_pup_alignment_GCalignR.RData")
+
+scent_factors_raw <- read_delim("documents/metadata_seal_scent.txt", 
+                                "\t", escape_double = FALSE, trim_ws = TRUE)
+scent_factors_raw <- as.data.frame(scent_factors_raw[-c(194:209),])
+
+# set sample names as row names, ensure there are no duplicates
+scent_factors <- scent_factors_raw[,-1]
+rownames(scent_factors) <- scent_factors_raw[,1]
+
+## check for empty samples, i.e. no peaks
+x <- apply(mom_pup_aligned$aligned$RT, 2, sum)
+x <- which(x == 0)
+
+## normalise area and return a data frame
+scent <- norm_peaks(mom_pup_aligned, conc_col_name = "Area",rt_col_name = "RT",
+                    out = "data.frame") 
+## common transformation for abundance data to reduce the extent of mean-variance trends
+scent <- log(scent + 1) 
+
+## subset scent_factors
+scent_factors <- scent_factors[rownames(scent_factors) %in% rownames(scent),]
+scent <- scent[rownames(scent) %in% rownames(scent_factors),]
+
+## keep order of rows consistent
+scent <- scent[match(rownames(scent_factors),rownames(scent)),] 
+
+## get number of compounds for each individual sample after alignment
+num_comp <- as.vector(apply(scent, 1, function(x) length(x[x>0]))) 
+
+## bray-curtis similarity
+scent_nmds.obj <- vegan::metaMDS(comm = scent, k = 2, try = 999, 
+                                 trymax = 9999, distance = "bray") 
+
+scent_nmds <- as.data.frame(scent_nmds.obj[["points"]])  
+
+scent_nmds <- cbind(scent_nmds,
+                    age = scent_factors[["age"]],
+                    tissue_tag = scent_factors[["tissue_tag"]],
+                    colony = scent_factors[["colony"]],
+                    family = as.factor(scent_factors[["family"]]),
+                    clr = as.factor(scent_factors[["clr"]]),
+                    shp = as.factor(scent_factors[["shp"]]),
+                    gcms = as.factor(scent_factors[["gcms_run"]]),
+                    peak_res = as.factor(scent_factors[["peak_res"]]),
+                    sample_qlty = as.factor(scent_factors[["sample_qlty"]]),
+                    vialdate = as.factor(scent_factors[["gcms_vialdate"]]),
+                    captured = as.factor(scent_factors[["capture_date"]]),
+                    sex = scent_factors[["sex"]],
+                    num_comp = num_comp)
+scent_nmds <- scent_nmds %>% mutate(BeachAge = str_c(colony, age, sep = "_")) 
+# creates & adds new variable BeachAge and simplifies plotting
+```
+
+## Colony and family membership in SSB and FWB mom-pup pairs
+```{r Colony membership in SSB and FWB mom-pup pairs, echo=TRUE, message=FALSE, warning=FALSE}
+load("RData/objects/mom_pup_nmds_scaling.RData")
+
+## colony membership plot
+mp_colony_gg <- ggplot(data = scent_nmds) + 
+  geom_point(size = 4.5, aes(MDS1, MDS2, color = BeachAge, shape = BeachAge)) + 
+  scale_shape_manual(values = c(19, 1, 19, 1), 
+                     labels = c("FWB mothers ", "FWB pups ", 
+                                "SSB mothers ", "SSB pups ")) +
+  scale_color_manual(values = c("#D55E00", "#D55E00", "#56B4E9", "#56B4E9"), 
+                     labels = c("FWB mothers ", "FWB pups ", 
+                                "SSB mothers ", "SSB pups ")) +
+  theme_void() + 
+  ylim(-0.75,1.1) +
+  annotate("text", x = 0.64, y = 1.1, label = "A", size = 5) +
+  annotate("text", x = 0.47, y = -0.74, label = "2D Stress: 0.23", size = 4) +
+  theme(panel.background = element_rect(colour = "black", size = 1, fill = NA),
+        aspect.ratio = 1,
+        legend.position = "none",
+        legend.title = element_blank(),
+        legend.background = element_rect(size = 0.3, linetype = "solid", color = "black")) 
+# call colony membership plot
+mp_colony_gg
+
+## mother-offspring similarity plot
+# create color palette for the plot
+clr <- c("#D55E00", "red", "#56B4E9", "#009E73","#000000", "#CC79A7") 
+
+# assign pch values for plotting
+shp <- c(0,1,2,7,10,5,6,18,16,17,15) 
+
+# create unique color-pch pairs
+color_shape_pairs <- crossing(clr,shp) 
+
+# randomly sample 50 unique pairs (sample without replacement)
+set.seed(123) # always get same pairs in a run
+color_shape_pairs <- color_shape_pairs[sample(nrow(color_shape_pairs), 50),] 
+
+# assign new dataframes to transform scent_nmds$clr & shp with the unique values we created
+color_shape_pairs_plot <- rbind(color_shape_pairs[1:25,],color_shape_pairs[1:7,]
+                                ,color_shape_pairs[7,],  color_shape_pairs[8:25,], 
+                                color_shape_pairs[26:50,], color_shape_pairs[26:50,])
+scent_nmds$clr <- as.factor(color_shape_pairs_plot$clr)
+scent_nmds$shp <- as.factor(color_shape_pairs_plot$shp)
+
+# call family plot
+mp_family_gg <- ggplot(data = scent_nmds,aes(MDS1,MDS2, color = clr, shape = shp)) + 
+  geom_point(size = 4.5) +
+  scale_shape_manual(values = as.numeric(levels(scent_nmds$shp))) +
+  theme_void() + 
+  ylim(-0.75,1.1) +
+  scale_color_manual(values = levels(scent_nmds$clr)) +
+  annotate("text", x = 0.64, y = 1.1, label = "B", size = 5) +
+  annotate("text", x = 0.48, y = -0.74, label = "2D Stress: 0.23", size = 4) +
+  theme(panel.background = element_rect(colour = "black", size = 1,
+                                        fill = NA), aspect.ratio = 1, 
+        legend.position = "none") 
+mp_family_gg
+```
+
+
+## PERMANOVA for mother-pup similiarity and colony membership
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+# set seed to reproduce the same outcome (can vary due to different permutations!)
+set.seed(123)
+
+# set counter for while loop
+perm_count <- c(99)
+
+# iterate different significance levels with a while-loop
+while (perm_count <= 99999) {# end while-loop after the run for 99999 permutations
+  permanova_result_MP <- adonis(scent ~ age+colony+colony:family, 
+         data = scent_factors,
+         method = "bray",
+         permutations = perm_count)
+  print(permanova_result_MP)
+  
+  perm_count <- (perm_count*10)+9 # ends while-iteration after it increases to 999999
+}#while
+```
+
+Post-hoc betadisper and pairwise comparisons for mother-pup pair PERMANOVA results
+```{r Post-hoc betadisper for mother-pup pair PERMANOVA results}
+# test for group dispersal
+# for different colonies
+mod_colony  <- betadisper(vegdist(scent), scent_factors$colony, type = "median")
+anova(mod_colony)
+
+# for different ages (mom vs pup)
+mod_age <- betadisper(vegdist(scent), scent_factors$age, type = "median")
+anova(mod_age)
+
+# for different combinations of age and colony identity
+mod_BeachAge <- betadisper(vegdist(scent), scent_nmds$BeachAge, type = "median")
+anova(mod_BeachAge)
+```
+
+
+Pairwise comparison between all possible combinations of mother-pup pairs based on colony identity and age
+```{r Pairwise comparison between all possible combinations of mother-pup pairs based on colony identity and age}
+set.seed(123) # for comparability as results do not change when compared to manuscript
+pairwiseAdonis::pairwise.adonis(scent, scent_nmds$BeachAge, perm = 99999)
+
+
+# Pairwise group dispersal tests
+
+# scent, scent_factors and scent_nmds are all data.frames the have the same row setup.
+# Meaning: Each row respresenting an individual is identical in each data.frame.
+# Thus, we can index pairs based on scent_nmds$BeachAge manually.
+
+pairwise_betadisper1 <- betadisper(vegdist(scent[scent_nmds$BeachAge == "SSB_1" | scent_nmds$BeachAge == "SSB_2",]), 
+                            scent_nmds$BeachAge[scent_nmds$BeachAge == "SSB_1" | scent_nmds$BeachAge == "SSB_2"],
+                            type = "median")
+anova(pairwise_betadisper1)
+
+
+pairwise_betadisper2 <- betadisper(vegdist(scent[scent_nmds$BeachAge == "SSB_1" | scent_nmds$BeachAge == "FWB_1",]), 
+                            scent_nmds$BeachAge[scent_nmds$BeachAge == "SSB_1" | scent_nmds$BeachAge == "FWB_1"],
+                            type = "median")
+anova(pairwise_betadisper2)
+
+pairwise_betadisper3 <- betadisper(vegdist(scent[scent_nmds$BeachAge == "SSB_1" | scent_nmds$BeachAge == "FWB_2",]), 
+                            scent_nmds$BeachAge[scent_nmds$BeachAge == "SSB_1" | scent_nmds$BeachAge == "FWB_2"],
+                            type = "median")
+anova(pairwise_betadisper3)
+
+pairwise_betadisper4 <- betadisper(vegdist(scent[scent_nmds$BeachAge == "SSB_2" | scent_nmds$BeachAge == "FWB_1",]), 
+                            scent_nmds$BeachAge[scent_nmds$BeachAge == "SSB_2" | scent_nmds$BeachAge == "FWB_1"],
+                            type = "median")
+anova(pairwise_betadisper4)
+
+pairwise_betadisper5 <- betadisper(vegdist(scent[scent_nmds$BeachAge == "SSB_2" | scent_nmds$BeachAge == "FWB_2",]), 
+                            scent_nmds$BeachAge[scent_nmds$BeachAge == "SSB_2" | scent_nmds$BeachAge == "FWB_2"],
+                            type = "median")
+anova(pairwise_betadisper5)
+
+pairwise_betadisper6 <- betadisper(vegdist(scent[scent_nmds$BeachAge == "FWB_1" | scent_nmds$BeachAge == "FWB_2",]), 
+                            scent_nmds$BeachAge[scent_nmds$BeachAge == "FWB_1" | scent_nmds$BeachAge == "FWB_2"],
+                            type = "median")
+anova(pairwise_betadisper6)
+```
+
+
+## NMDS scaling and colony membership in six pup colonies
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
+load("RData/objects/pup_colonies_alignment_GCalignR.RData")
+scent_factors_raw <- read_delim("documents/metadata_seal_scent.txt", 
+                                "\t", escape_double = FALSE, trim_ws = TRUE)
+scent_factors_raw <- as.data.frame(scent_factors_raw[-c(194:209),])
+
+# set sample names as row names, ensure there are no duplicates
+scent_factors <- scent_factors_raw[,-1]
+rownames(scent_factors) <- scent_factors_raw[,1]
+
+## check for empty samples, i.e. no peaks
+x <- apply(pup_colonies_aligned$aligned$RT, 2, sum)
+x <- which(x == 0)
+
+## normalise area and return a data frame
+scent <- norm_peaks(pup_colonies_aligned, conc_col_name = "Area",rt_col_name = "RT",
+                    out = "data.frame") 
+## common transformation for abundance data to reduce the extent of mean-variance trends
+scent <- log(scent + 1) 
+
+## subset scent_factors
+scent_factors <- scent_factors[rownames(scent_factors) %in% rownames(scent),]
+scent <- scent[rownames(scent) %in% rownames(scent_factors),]
+
+## keep order of rows consistent
+scent <- scent[match(rownames(scent_factors),rownames(scent)),] 
+
+## get number of compounds for each individual sample after alignment
+num_comp <- as.vector(apply(scent, 1, function(x) length(x[x>0])))
+
+## bray-curtis similarity
+scent_nmds.obj <- metaMDS(comm = scent, k = 2, try = 999, 
+                          trymax = 9999, distance = "bray") 
+## MDS outcome evaluated with PCA for factor colony in metadata table for individuals
+scent_nmds <- with(scent_factors, MDSrotate(scent_nmds.obj, colony))
+
+## get x and y coordinates
+scent_nmds <- as.data.frame(scent_nmds[["points"]])  
+
+## add the colony as a factor to each sample
+scent_nmds <- cbind(scent_nmds,
+                    age = scent_factors[["age"]],
+                    tissue_tag = scent_factors[["tissue_tag"]],
+                    colony = scent_factors[["colony"]],
+                    family = as.factor(scent_factors[["family"]]),
+                    clr = as.factor(scent_factors[["clr"]]),
+                    shp = as.factor(scent_factors[["shp"]]),
+                    gcms = as.factor(scent_factors[["gcms_run"]]),
+                    peak_res = as.factor(scent_factors[["peak_res"]]),
+                    sample_qlty = as.factor(scent_factors[["sample_qlty"]]),
+                    vialdate = as.factor(scent_factors[["gcms_vialdate"]]),
+                    captured = as.factor(scent_factors[["capture_date"]]),
+                    sex = scent_factors[["sex"]],
+                    num_comp = num_comp)
+# creates & adds new variable BeachAge 
+scent_nmds <- scent_nmds %>% mutate(BeachAge = str_c(colony, age, sep = "_")) 
+```
+
+
+Colony membership plot for six pup colonies (Supplementary figure)
+```{r}
+load("RData/objects/pup_colonies_nmds_scaling.RData")
+
+pup_colony_gg <- ggplot(data = scent_nmds, aes(MDS1, MDS2, color = colony, shape = colony)) + 
+  geom_point(size = 4.5) + 
+  scale_shape_manual(values = c(15,20,17,15,17,18),
+                     labels = c("FWB", "Johnson cove", "Landing beach", "Main bay", "Natural arch", "SSB")) +
+  scale_color_manual(values = c("#D55E00", "#000000", "#E69F00", "#009E73", "#CC79A7", "#0072B2"),
+                     labels = c("FWB", "Johnson cove", "Landing beach", "Main bay", "Natural arch", "SSB")) +
+  theme_void() + 
+  annotate("text", x = 0.6, y = -0.94, label = "2D Stress: 0.24", size = 4) +
+  theme(panel.background = element_rect(colour = "black", size = 1, fill = NA),
+        aspect.ratio = 1,
+        legend.position = "right", #c(0.1,0.87),
+        legend.title = element_blank(),
+        # legend.key.size = unit(0.5, "cm"),
+        # legend.key.width = unit(0.5, "cm"),
+        legend.background = element_rect(size = 0.3, linetype = "solid", color = "black"))
+
+pup_colony_gg
+
+```
+
+
+PERMANOVA for colony membership in six pup colonies
+```{r}
+# set seed to reproduce the same outcome (can vary due to different permutations!)
+set.seed(123)
+
+# set counter for while loop
+perm_count <- c(99)
+
+# iterate different significance levels with a while-loop
+while (perm_count <= 99999) {# end while-loop after the run for 99999 permutations
+  permanova_result_pupcols <- adonis(scent ~ age+colony+colony:family, 
+         data = scent_factors,
+         method = "bray",
+         permutations = perm_count)
+  print(permanova_result_pupcols)
+  
+  perm_count <- (perm_count*10)+9 # ends while-iteration after it increases to 999999
+}#while 
+```
+
+
+Post-hoc tests for PERMANOVA results for six pup colonies
+```{r}
+# pairwise PERMANOVA
+pairwiseAdonis::pairwise.adonis(scent, scent_factors$colony, perm = 99999)
+
+# test for group dispersal
+mod2 <- betadisper(vegdist(scent), scent_factors$colony, type = "median")
+anova(mod2)
+```
+
+## Re-evaluation of 2011 field season scent data
+Perform non-metric multidimensional scaling
+```{r eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE, include=TRUE, results='hide'}
+## normalise area and return a data frame
+# uses intrinsic data of GCalignR, as this is data used in Stoffel et al. 2015
+scent <- norm_peaks(aligned_peak_data, conc_col_name = "area",rt_col_name = "time",out = "data.frame") 
+## common transformation for abundance data to reduce the extent of mean-variance trends
+scent <- log(scent + 1) 
+
+## GCalignR contains factors for the chemical dataset
+data("peak_factors") 
+## keep order of rows consistent
+scent <- scent[match(row.names(peak_factors),row.names(scent)),] 
+## NMDS using Bray-Curtis dissimilarities
+scent_nmds <- vegan::metaMDS(comm = scent, distance = "bray", try = 999, trymax = 9999)
+## get x and y coordinates
+scent_nmds <- as.data.frame(scent_nmds[["points"]])  
+## add the colony, etc. as a factor to each sample
+scent_nmds <- cbind(scent_nmds,
+                    colony = peak_factors[["colony"]],
+                    family = peak_factors[["family"]],
+                    age = peak_factors[["age"]])
+scent_nmds <- scent_nmds %>% mutate(BeachAge = str_c(colony, age, sep = "_")) 
+# creates & adds new variable BeachAge Colony Identity + Age(Mom or Pup) of the individual
+
+#sort scent_nmds for color_shape_pairs_plot to form and plot unique family pairs
+scent_nmds <- scent_nmds %>% arrange(colony)
+```
+
+
+Re-evalution in PERMANOVA instead of ANOSIM
+```{r message=FALSE, warning=FALSE}
+## PERMANOVA
+set.seed(123)
+adonis(scent ~ age+colony+colony:family, 
+       data = peak_factors, 
+       permutations = 99999)
+
+# Test for heterogeneity
+anova(betadisper(vegdist(scent), peak_factors$colony))
+```
+
+## Effect size estimate by PERMANOVA R² bootstrap
+```{r Effect size estimate by PERMANOVA R2 bootstrap, eval=FALSE, include=TRUE}
+## Load data and assign data to data.frames
+load("RData/objects/R2_initial_season_btrap.RData")
+
+old_season_colony <- paov_r2_results[[1]][[2]]
+old_season_family <- paov_r2_results[[1]][[3]]
+
+load("RData/objects/R2_replication_season_btrap.RData")
+new_season_colony <- paov_r2_results[[1]][[2]]
+new_season_family <- paov_r2_results[[1]][[3]]
+
+MP_effectsize <- c(old_season_colony, new_season_colony, 
+                   old_season_family, new_season_family)
+
+MP_effectsize.groups <- c(rep("Colony S1", 5000),
+                          rep("Colony S2", 5000),
+                          rep("Family S1", 5000), 
+                          rep("Family S2", 5000))
+
+MP_effectsize.df <- data.frame(btrap_combined_results = MP_effectsize,
+                               btrap_subset_groups = MP_effectsize.groups)
+```
+
+
+Effect size estimate plot
+```{r Effect size estimate plot, echo=TRUE}
+load("RData/objects/effect_size_df.RData")
+# point estimates for PERMANOVA on non-bootstrapped (original) data
+point_estimate <- c(0.1444734, 0.09168289, 0.08780086, 0.1209394)
+# point estimate groups for reasons of comprehensibility
+point_estimate_groups <- c("Colony S1", "Colony S2", "Family S1", "Family S2")
+
+# plot commands
+MP_effectsize_gg <- ggplot(MP_effectsize.df, aes(y = btrap_combined_results, 
+                                                 x = btrap_subset_groups, 
+                                                 color = btrap_subset_groups)) + 
+  # this arranges the points according to their density
+  geom_quasirandom(alpha = 0.06, size = 3, width = 0.3, bandwidth = 1) + 
+  scale_color_manual(values = c("#E69F00" ,"#E69F00" ,"#CC79A7", "#CC79A7")) +
+  # makes the boxplots 
+  geom_boxplot(width = 0.35, outlier.shape = NA, color = "white", alpha = 0.1, lwd=0.8) +
+  annotate("point", x = 1, y = point_estimate[4], colour = "#000000", 
+           fill = "#CCCCCC", size = 2, shape = 21) + 
+  annotate("point", x = 2, y = point_estimate[3], colour = "#000000", 
+           fill = "#CCCCCC", size = 2, shape = 21) +
+  annotate("point", x = 3, y = point_estimate[2], colour = "#000000", 
+           fill = "#CCCCCC", size = 2, shape = 21) +
+  annotate("point", x = 4, y = point_estimate[1], colour = "#000000", 
+           fill = "#CCCCCC", size = 2, shape = 21) +
+  # this is a possible theme of the plot, there are many others
+  theme_classic() +
+  # changes the labels on the x axis
+  scale_y_continuous(limits = c(-0.01 ,0.25),
+                     breaks = seq(0, 0.25, 0.05)) +
+  scale_x_discrete(labels = c("Family S2" = "Mother-offspring similarity\nreplication study",
+                              "Family S1" = "Mother-offspring similarity\noriginal study",
+                              "Colony S2" = "Colony membership\nreplication study",
+                              "Colony S1" = "Colony membership\noriginal study"),
+                   limits = c("Family S2",
+                              "Family S1",
+                              "Colony S2", 
+                              "Colony S1")) +
+  # geom_hline(yintercept = 0, linetype = "dashed") +
+  xlab("") +
+  # label for y axis
+  ylab("Explained variation [R²]") +
+  # flips plot so everything is horizontal
+  coord_flip() +
+  # adjust theme specifics
+  theme(panel.background = element_rect(colour = "black", size = 1.25, fill = NA),
+        text = element_text(size = 15),
+        axis.text = element_text(colour = "black"),
+        legend.position = "none")
+
+
+MP_effectsize_gg
+```
+
+## R2 Bootstrap Code
+```{r eval=FALSE, include=TRUE}
+## creates function 'scent_btrap_r2_swarm_data' that performs bootstrap
+
+# Bootstrap to track R2 values for randomized subsets. In addition,
+# bootstrap cannot only be used to randomize the chemical data frame
+# to evaluate R2 distribution as effect size estimates, 
+# but also to evaluate R2 change for different subsets based on different
+# premises. 1) Frequent peaks 2) Strong concentrations 3) Peaks identified by SIMPER
+
+require(vegan)
+
+# path: file path to scent_nmds-mompup2017_ssbfwb.RData", 
+#objects: scent_nmds, scent_nmds.obj, scent_factors, scent
+# df.permutations: number of times the scent.df from loaded data will be permuted
+# nmds.permutations: number of permutation in nMDS using Bray-Curtis
+# btrap.iterations: number of procedure repeats
+
+scent_btrap_r2_swarm_data <- function(path, df.permutations = 15, 
+                                      nmds.permutations = 999, 
+                                      btrap.iterations = 5000){
+  # Create a data frame by permuting the data for scent
+  # compounds data and also ensure that each population*age occur
+  # same amounts of time in the permutation data frame. 
+  #---------------------------------------
+  
+  # load data frame with data of aligned fur seal chromatograms
+  load(path)
+  scent_factors <- peak_factors
+  # transfer BeachAge Column from scent_nmds to meta data.frame scent_factors
+  scent_factors <- cbind(scent_factors, 
+                         BeachAge = scent_nmds$BeachAge)
+  
+  # create index column for meta data frame
+  scent_factors <- cbind(scent_factors,
+                         SampleIndex = 1:length(rownames(scent_factors)))
+  
+  
+  # create data.frame to track PERMANOVA results over repeated tests
+  nonsubset_results_paov <- data.frame(R2_age = double(), p_colfam = double(),
+                                       R2_residual = double(), 
+                                       F_Het = double(), p_Het = double())
+  promcomp_results_paov <- data.frame(R2_age = double(), p_colfam = double(),
+                                      R2_residual = double(), 
+                                      F_Het = double(), p_Het = double())
+  highcomp_results_paov <- data.frame(R2_age = double(), p_colfam = double(),
+                                      R2_residual = double(), 
+                                      F_Het = double(), p_Het = double())
+  simper_results_paov <- data.frame(R2_age = double(), p_colfam = double(),
+                                    R2_residual = double(), 
+                                    F_Het = double(), p_Het = double())
+  
+  # create list to store created objects in an iteration
+  iter_object_container <- list()
+  
+  for (i in 1:btrap.iterations) {
+    
+    
+    # create data.frame subsets (colony subset) by indexing the meta data.frame 
+    scent.f.ssb.m <- scent_factors[scent_factors$BeachAge == "SSB_1",]
+    scent.f.fwb.m <- scent_factors[scent_factors$BeachAge == "FWB_1",]
+    scent.f.ssb.p <- scent_factors[scent_factors$BeachAge == "SSB_2",]
+    scent.f.fwb.p <- scent_factors[scent_factors$BeachAge == "FWB_2",]
+    
+    # int vector of row index number of permuted scent.ssb data.frame
+    # row numbers will be used to create a permuted data.frame of 
+    # evenly distributed draws of individuals
+    permute_rows_ssb_m <- sample(scent.f.ssb.m$SampleIndex, df.permutations, replace = T)
+    permute_rows_fwb_m <- sample(scent.f.fwb.m$SampleIndex, df.permutations, replace = T)
+    permute_rows_ssb_p <- sample(scent.f.ssb.p$SampleIndex, df.permutations, replace = T)
+    permute_rows_fwb_p <- sample(scent.f.fwb.p$SampleIndex, df.permutations, replace = T)
+    
+    # create overall index number that can be used to 
+    #index data.frame(scent): index corresponds to correct individual 
+    perm_index_all <- c(permute_rows_ssb_m, 
+                        permute_rows_fwb_m,
+                        permute_rows_ssb_p,
+                        permute_rows_fwb_p)
+    
+    # create new data.frame with indeces found in permutation 
+    # results vector perm_index_all
+    scent.permute <- scent[perm_index_all,]
+    scent_factors.permute <- scent_factors[perm_index_all,]
+    # rownames(scent.permute) == rownames(scent_factors.permute) # TRUE
+    #---------------------------------------
+    
+    # Perform analysis to find 3 subsets based on different premises 
+    # with the permuted data frame. 
+    # Track 15 best performing compounds of an analysis
+    #---------------------------------------
+    
+    ## NDMS scale results
+    ## count number of peaks that are not 0 per column
+    peak_count <- as.vector(apply(scent.permute, 2, function(x) length(x[x>0]))) 
+    
+    ## add peaks in a column that are not 0 to estimate highest 
+    # concentration peak sum
+    peak_add <- as.vector(apply(scent.permute, 2, function(x) sum(x))) 
+    
+    ## create dataframe with same name properties as scent.RData
+    compound_subset <- data.frame(name = colnames(scent.permute), 
+                                  peak_count, peak_add)
+    
+    ## sort data frame for most prominent compounds over all samples
+    most_abundant <- compound_subset %>% arrange(desc(peak_count))
+    
+    ## shorten scent matrix to only the 15 most abundant compounds
+    scent.promcomp <- scent.permute[colnames(scent.permute) %in% 
+                                      most_abundant$name[1:15]]
+    
+    ## sort data frame for most highly concentrated compounds over all samples
+    most_concentration <- compound_subset %>% arrange(desc(peak_add))
+    
+    ## shorten scent matrix to only the 15 most abundant compounds
+    scent.highcomp <- scent.permute[colnames(scent.permute) %in% 
+                                      most_concentration$name[1:15]]
+    
+    ## simper
+    # simper analysis and results array
+    sim <- with(scent_factors.permute, 
+                simper(scent.permute, colony))
+    best.compounds.simper.btrap <- summary(sim)[[1]]
+    #filter 15 compounds that contribute most towards dissimilarity of individuals
+    simper_comps <- as.numeric(rownames(best.compounds.simper.btrap))
+    best_comps <- simper_comps[1:15] 
+    # subset peak data matrix {scent}
+    scent.simper.btrap <- scent.permute[,which(colnames(scent.permute) %in% 
+                                                 as.character(best_comps))]
+    #---------------------------------------
+    
+    # Take 15 identified compounds and limit nMDS of the permuted 
+    # data frame (scent.permute) to only those compounds
+    
+    #---------------------------------------
+    
+    # bray-curtis similarity
+    scent_nmds_regular.obj <- vegan::metaMDS(comm = scent.permute, k = 2, 
+                                             try = df.permutations, distance = "bray")
+    scent_nmds_count.obj <- vegan::metaMDS(comm = scent.promcomp, k = 2, 
+                                           try = df.permutations, distance = "bray") 
+    scent_nmds_add.obj <- vegan::metaMDS(comm = scent.highcomp, k = 2, 
+                                         try = df.permutations, distance = "bray") 
+    scent_nmds_simper.obj <- vegan::metaMDS(comm = scent.simper.btrap, k = 2, 
+                                            try = df.permutations, distance = "bray")
+    
+    ## get x and y coordinates
+    scent_nmds_regular <- as.data.frame(scent_nmds_regular.obj[["points"]])
+    scent_nmds_count <- as.data.frame(scent_nmds_count.obj[["points"]]) 
+    scent_nmds_add <- as.data.frame(scent_nmds_add.obj[["points"]])
+    scent_nmds_simper <- as.data.frame(scent_nmds_simper.obj[["points"]])
+    
+    ## add the colony as a factor to each sample
+    scent_nmds <- data.frame(MDS1r = scent_nmds_regular[["MDS1"]],
+                             MDS2r = scent_nmds_regular[["MDS2"]],
+                             MDS1c = scent_nmds_count[["MDS1"]],
+                             MDS2c = scent_nmds_count[["MDS2"]],
+                             MDS1a = scent_nmds_add[["MDS1"]],
+                             MDS2a = scent_nmds_add[["MDS2"]],
+                             MDS1s = scent_nmds_simper[["MDS1"]],
+                             MDS2s = scent_nmds_simper[["MDS2"]], 
+                             age = scent_factors.permute[["age"]],
+                             colony = scent_factors.permute[["colony"]],
+                             family = scent_factors.permute[["family"]],
+                             BeachAge = scent_factors.permute[["BeachAge"]]
+    )
+    #---------------------------------------
+    
+    # Perform PERMANOVA on distance matrix based limited scent compounds data
+    #---------------------------------------
+    
+    # not subsetted
+    nonsubset.df_permanova <- adonis(scent.permute ~ age + colony + colony:family,
+                                     data = scent_factors.permute,
+                                     permutations = 9999)
+    nonsubset.df_hetgeneity <- anova(betadisper(vegdist(scent.permute), 
+                                                scent_factors.permute$colony))
+    
+    # track important values of statistical analysis in this run
+    nonsubset_iter_res_paov <- cbind(R2_age = nonsubset.df_permanova$aov.tab$R2[1],
+                                     R2_colony = nonsubset.df_permanova$aov.tab$R2[2],
+                                     R2_famcol = nonsubset.df_permanova$aov.tab$R2[3],
+                                     R2_residual = nonsubset.df_permanova$aov.tab$R2[4],
+                                     F_Het = nonsubset.df_hetgeneity$`F value`[1],
+                                     p_Het = nonsubset.df_hetgeneity$`Pr(>F)`[1])
+    
+    # bind run values to track changes over iterations in the for-loop
+    nonsubset_results_paov <- rbind(nonsubset_results_paov,
+                                    nonsubset_iter_res_paov)
+  
+    #prom comps
+    promcomp.df_permanova <- adonis(scent.promcomp ~ age + colony + colony:family, 
+                                    data = scent_factors.permute, 
+                                    permutations = 9999) 
+    promcomp.df_hetgeneity <- anova(betadisper(vegdist(scent.promcomp), 
+                                               scent_factors.permute$colony)) 
+    
+    promcomp_iter_res_paov <- cbind(R2_age = promcomp.df_permanova$aov.tab$R2[1],
+                                    R2_colony = promcomp.df_permanova$aov.tab$R2[2],
+                                    R2_famcol = promcomp.df_permanova$aov.tab$R2[3],
+                                    R2_residual = promcomp.df_permanova$aov.tab$R2[4],
+                                    F_Het = promcomp.df_hetgeneity$`F value`[1],
+                                    p_Het = promcomp.df_hetgeneity$`Pr(>F)`[1])
+    
+    promcomp_results_paov <- rbind(promcomp_results_paov,
+                                   promcomp_iter_res_paov)
+    
+    # high comps
+    highcomp.df_permanova <- adonis(scent.highcomp ~ age + colony + colony:family, 
+                                    data = scent_factors.permute, 
+                                    permutations = 9999) 
+    highcomp.df_hetgeneity <- anova(betadisper(vegdist(scent.highcomp), scent_factors.permute$colony)) 
+    
+    highcomp_iter_res_paov <- cbind(R2_age = highcomp.df_permanova$aov.tab$R2[1],
+                                    R2_colony = highcomp.df_permanova$aov.tab$R2[2],
+                                    R2_famcol = highcomp.df_permanova$aov.tab$R2[3],
+                                    R2_residual = highcomp.df_permanova$aov.tab$R2[4],
+                                    F_Het = highcomp.df_hetgeneity$`F value`[1],
+                                    p_Het = highcomp.df_hetgeneity$`Pr(>F)`[1])
+    
+    highcomp_results_paov <- rbind(highcomp_results_paov,
+                                   highcomp_iter_res_paov)
+    # SIMPER
+    simper.df_permanova <- adonis(scent.simper.btrap ~ age + colony + colony:family, 
+                                  data = scent_factors.permute, 
+                                  permutations = 9999) 
+    simper.df_hetgeneity <- anova(betadisper(vegdist(scent.simper.btrap), scent_factors.permute$colony)) 
+    
+    simper_iter_res_paov <- cbind(R2_age = simper.df_permanova$aov.tab$R2[1],
+                                  R2_colony = simper.df_permanova$aov.tab$R2[2],
+                                  R2_famcol = simper.df_permanova$aov.tab$R2[3],
+                                  R2_residual = simper.df_permanova$aov.tab$R2[4],
+                                  F_Het = simper.df_hetgeneity$`F value`[1],
+                                  p_Het = simper.df_hetgeneity$`Pr(>F)`[1])
+    
+    simper_results_paov <- rbind(simper_results_paov,
+                                 simper_iter_res_paov)
+    #---------------------------------------
+    
+    
+    # # pack all this in a list to be later on stored in a list that can be saved again
+    # create name giving the iteration step
+    iteration_count <- paste0("iter_", i)
+    
+    # create list that stores relevant workspace elements for an iteration step
+    iter_objects <- list(scent.permute = scent.permute,
+                         scent_factors.permute = scent_factors.permute,
+                         scent.promcomp = scent.promcomp,
+                         scent.highcomp = scent.highcomp,
+                         sim = sim,
+                         scent.simper.btrap = scent.simper.btrap,
+                         scent_nmds_regular.obj = scent_nmds_regular.obj,
+                         scent_nmds_count.obj = scent_nmds_count.obj,
+                         scent_nmds_add.obj = scent_nmds_add.obj,
+                         scent_nmds_simper.obj = scent_nmds_simper.obj,
+                         scent_nmds_regular = scent_nmds_regular,
+                         scent_nmds_count = scent_nmds_count,
+                         scent_nmds_add = scent_nmds_add,
+                         scent_nmds_simper = scent_nmds_simper,
+                         promcomp.df_permanova = promcomp.df_permanova,
+                         promcomp.df_hetgeneity = promcomp.df_hetgeneity,
+                         highcomp.df_permanova = highcomp.df_permanova,
+                         highcomp.df_hetgeneity = highcomp.df_permanova,
+                         simper.df_permanova = simper.df_permanova,
+                         simper.df_hetgeneity = simper.df_hetgeneity)
+    
+    # save everything as a list in a container list, that stores 
+    # information/elements of all iteration steps
+    iter_object_container[[i]] <- iter_objects
+    names(iter_object_container)[i] <- iteration_count
+    
+  } # end i
+  
+  paov_r2_results <- list(regular = nonsubset_results_paov,
+                          promcomp = promcomp_results_paov,
+                          highcomp = highcomp_results_paov,
+                          simper_res = simper_results_paov)
+  return(list(paov_r2_results = paov_r2_results, 
+              iter_object_container = iter_object_container))
+} # end function
+
+```
+
+## Session information
+```{r Session information, echo=FALSE}
+sessionInfo()
+```
