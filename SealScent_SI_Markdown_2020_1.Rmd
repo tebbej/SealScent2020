@@ -191,6 +191,7 @@ scent_nmds$shp <- as.factor(color_shape_pairs_plot$shp)
 # call family plot
 mp_family_gg <- ggplot(data = scent_nmds,aes(MDS1,MDS2, color = clr, shape = shp)) + 
   geom_point(size = 4.5) +
+  geom_line() +
   scale_shape_manual(values = as.numeric(levels(scent_nmds$shp))) +
   theme_void() + 
   ylim(-0.75,1.1) +
