@@ -763,8 +763,8 @@ Bonferroni correction for pairwise betadisper
 \begin{Highlighting}[]
 \CommentTok{# get p-values for betadisper (same}
 \CommentTok{# order)}
-\NormalTok{betadisper_sig_values <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\FloatTok{0.7504}\NormalTok{, }\FloatTok{0.06678}\NormalTok{, }
-    \FloatTok{0.3341}\NormalTok{, }\FloatTok{0.03738}\NormalTok{, }\FloatTok{0.2077}\NormalTok{, }\FloatTok{0.3618}\NormalTok{)}
+\NormalTok{betadisper_sig_values <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\FloatTok{0.1336}\NormalTok{, }\FloatTok{0.7504}\NormalTok{, }
+    \FloatTok{0.06678}\NormalTok{, }\FloatTok{0.3341}\NormalTok{, }\FloatTok{0.03738}\NormalTok{, }\FloatTok{0.2077}\NormalTok{, }\FloatTok{0.3618}\NormalTok{)}
 
 \CommentTok{# correct p-values based on Bonferroni}
 \NormalTok{corrected_betadisper_sig_values <-}\StringTok{ }\KeywordTok{p.adjust}\NormalTok{(betadisper_sig_values, }
@@ -774,7 +774,7 @@ Bonferroni correction for pairwise betadisper
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 1.00000 0.40068 1.00000 0.22428 1.00000 1.00000
+## [1] 0.93520 1.00000 0.46746 1.00000 0.26166 1.00000 1.00000
 \end{verbatim}
 
 \subsection{NMDS scaling and colony membership in six pup
