@@ -1,12 +1,15 @@
 ---
 title: "Chemical patterns of colony membership and mother-offspring similarity in Antarctic fur seals are reproducible  - R Code"
-author: "Jonas Tebbe, Emily Humble, Martin A. Stoffel, Lisa Johanna Tewes, Caroline Müller, Jaume Forcada, Barbara Caspers & Joseph Ivan Hoffman"
-date: "April 2020"
+author: "Jonas Tebbe, Emily Humble, Martin A. Stoffel, Lisa Johanna Tewes, Caroline Müller,  \nJaume Forcada, Barbara Caspers & Joseph Ivan Hoffman"
+date: "July 2020"
 output: 
   pdf_document:
         keep_tex: true
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=40),tidy=TRUE)
+```
 
 ## Used packages
 Install with "install.packages". After installation, packages can be called with 'library' oder 'require'
@@ -23,7 +26,12 @@ library(pairwiseAdonis)
 
 ## Alignment procedure
 ```{r eval=FALSE, include=TRUE}
-## Alignment protocol to align a data frame with GCMS peaks for mother-pup pairs and pure pup colonies. For comparability, the six colonies only include pure pup data and thus, need a different alignment protocol, as algorithm properties are inherited within the function but not across functions callings. In consequence, alignment is more accurate for a set data subset.
+# Alignment protocol to align a data frame with GCMS peaks for 
+# mother-pup pairs and pure pup colonies. For comparability, the 
+# six colonies only include pure pup data and thus, need a different 
+# alignment protocol, as algorithm properties are inherited within 
+# the function but not across functions callings. In consequence, 
+# alignment is more accurate for a set data subset.
 
 
 load("RData/objects/seal_raw_dfs.Rdata")
@@ -33,28 +41,30 @@ index_MP <- c(1:61,72:111)
 index_pupcols <- c(51:160)
 
 # Aligning mom-pup colonies
-mom_pup_aligned <- align_chromatograms(data = all_dfs[index_MP], # input data
-                                         rt_col_name = "RT", # retention time variable name 
-                                         rt_cutoff_low = 15, # remove peaks below 15 Minutes
-                                         rt_cutoff_high = 54.7, # remove peaks exceeding 54.7 Minutes
-                                         reference = "P13", # sample with highest overall peak number
-                                         max_linear_shift = 0.05, # Premise 1: max. shift for linear corrections
-                                         max_diff_peak2mean = 0.08, # Premise 2: max. distance of a peak to the mean across samples
-                                         min_diff_peak2peak = 0.03, # Premise 3: min. expected distance between peaks 
-                                         delete_single_peak = T, # delete peaks that are present in just one sample 
-                                         write_output = NULL) # add variable names to write aligned data to text files
+mom_pup_aligned <- align_chromatograms(
+  data = all_dfs[index_MP], # input data
+  rt_col_name = "RT", # retention time variable name 
+  rt_cutoff_low = 15, # remove peaks below 15 Minutes
+  rt_cutoff_high = 54.7, # remove peaks exceeding 54.7 Minutes
+  reference = "P13", # sample with highest overall peak number
+  max_linear_shift = 0.05, # Premise 1: max. shift for linear corrections
+  max_diff_peak2mean = 0.08, # Premise 2: max. distance of a peak to the mean across samples
+  min_diff_peak2peak = 0.03, # Premise 3: min. expected distance between peaks 
+  delete_single_peak = T, # delete peaks that are present in just one sample 
+  write_output = NULL) # add variable names to write aligned data to text files
 
 # Aligning six pup colonies
-pup_colonies_aligned <- align_chromatograms(data = all_dfs[index_pupcols], # input data
-                                         rt_col_name = "RT", # retention time variable name 
-                                         rt_cutoff_low = 15, # remove peaks below 15 Minutes
-                                         rt_cutoff_high = 54.7, # remove peaks exceeding 54.7 Minutes
-                                         reference = "P13",# sample with highest overall peak number 
-                                         max_linear_shift = 0.05, # Premise 1: max. shift for linear corrections
-                                         max_diff_peak2mean = 0.08, # Premise 2: max. distance of a peak to the mean across samples
-                                         min_diff_peak2peak = 0.03, # Premise 3: min. expected distance between peaks
-                                         delete_single_peak = T, # delete peaks that are present in just one sample 
-                                         write_output = NULL) # add variable names to write aligned data to text files
+pup_colonies_aligned <- align_chromatograms(
+  data = all_dfs[index_pupcols], # input data
+  rt_col_name = "RT", # retention time variable name 
+  rt_cutoff_low = 15, # remove peaks below 15 Minutes
+  rt_cutoff_high = 54.7, # remove peaks exceeding 54.7 Minutes
+  reference = "P13",# sample with highest overall peak number 
+  max_linear_shift = 0.05, # Premise 1: max. shift for linear corrections
+  max_diff_peak2mean = 0.08, # Premise 2: max. distance of a peak to the mean across samples
+  min_diff_peak2peak = 0.03, # Premise 3: min. expected distance between peaks
+  delete_single_peak = T, # delete peaks that are present in just one sample 
+  write_output = NULL) # add variable names to write aligned data to text files
 
 
 ```
@@ -191,7 +201,7 @@ scent_nmds$shp <- as.factor(color_shape_pairs_plot$shp)
 # call family plot
 mp_family_gg <- ggplot(data = scent_nmds,aes(MDS1,MDS2, color = clr, shape = shp)) + 
   geom_point(size = 4.5) +
-  geom_line() +
+  # geom_line() +
   scale_shape_manual(values = as.numeric(levels(scent_nmds$shp))) +
   theme_void() + 
   ylim(-0.75,1.1) +
@@ -285,6 +295,17 @@ pairwise_betadisper6 <- betadisper(vegdist(scent[scent_nmds$BeachAge == "FWB_1" 
                             scent_nmds$BeachAge[scent_nmds$BeachAge == "FWB_1" | scent_nmds$BeachAge == "FWB_2"],
                             type = "median")
 anova(pairwise_betadisper6)
+```
+
+Bonferroni correction for pairwise betadisper
+```{r Bonferroni correction for pairwise betadisper}
+# get p-values for betadisper (same order)
+betadisper_sig_values <- c(0.7504, 0.06678, 0.3341, 0.03738, 0.2077, 0.3618)
+
+# correct p-values based on Bonferroni 
+corrected_betadisper_sig_values <- p.adjust(betadisper_sig_values, method = "bonferroni")
+corrected_betadisper_sig_values
+
 ```
 
 

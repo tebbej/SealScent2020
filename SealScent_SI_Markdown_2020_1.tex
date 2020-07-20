@@ -108,8 +108,9 @@
 \title{Chemical patterns of colony membership and mother-offspring similarity
 in Antarctic fur seals are reproducible - R Code}
 \author{Jonas Tebbe, Emily Humble, Martin A. Stoffel, Lisa Johanna Tewes,
-Caroline Müller, Jaume Forcada, Barbara Caspers \& Joseph Ivan Hoffman}
-\date{April 2020}
+Caroline Müller,\\
+Jaume Forcada, Barbara Caspers \& Joseph Ivan Hoffman}
+\date{July 2020}
 
 \begin{document}
 \maketitle
@@ -135,7 +136,12 @@ called with `library' oder `require'
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## Alignment protocol to align a data frame with GCMS peaks for mother-pup pairs and pure pup colonies. For comparability, the six colonies only include pure pup data and thus, need a different alignment protocol, as algorithm properties are inherited within the function but not across functions callings. In consequence, alignment is more accurate for a set data subset.}
+\CommentTok{# Alignment protocol to align a data frame with GCMS peaks for }
+\CommentTok{# mother-pup pairs and pure pup colonies. For comparability, the }
+\CommentTok{# six colonies only include pure pup data and thus, need a different }
+\CommentTok{# alignment protocol, as algorithm properties are inherited within }
+\CommentTok{# the function but not across functions callings. In consequence, }
+\CommentTok{# alignment is more accurate for a set data subset.}
 
 
 \KeywordTok{load}\NormalTok{(}\StringTok{"RData/objects/seal_raw_dfs.Rdata"}\NormalTok{)}
@@ -145,28 +151,30 @@ called with `library' oder `require'
 \NormalTok{index_pupcols <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{51}\OperatorTok{:}\DecValTok{160}\NormalTok{)}
 
 \CommentTok{# Aligning mom-pup colonies}
-\NormalTok{mom_pup_aligned <-}\StringTok{ }\KeywordTok{align_chromatograms}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ all_dfs[index_MP], }\CommentTok{# input data}
-                                         \DataTypeTok{rt_col_name =} \StringTok{"RT"}\NormalTok{, }\CommentTok{# retention time variable name }
-                                         \DataTypeTok{rt_cutoff_low =} \DecValTok{15}\NormalTok{, }\CommentTok{# remove peaks below 15 Minutes}
-                                         \DataTypeTok{rt_cutoff_high =} \FloatTok{54.7}\NormalTok{, }\CommentTok{# remove peaks exceeding 54.7 Minutes}
-                                         \DataTypeTok{reference =} \StringTok{"P13"}\NormalTok{, }\CommentTok{# sample with highest overall peak number}
-                                         \DataTypeTok{max_linear_shift =} \FloatTok{0.05}\NormalTok{, }\CommentTok{# Premise 1: max. shift for linear corrections}
-                                         \DataTypeTok{max_diff_peak2mean =} \FloatTok{0.08}\NormalTok{, }\CommentTok{# Premise 2: max. distance of a peak to the mean across samples}
-                                         \DataTypeTok{min_diff_peak2peak =} \FloatTok{0.03}\NormalTok{, }\CommentTok{# Premise 3: min. expected distance between peaks }
-                                         \DataTypeTok{delete_single_peak =}\NormalTok{ T, }\CommentTok{# delete peaks that are present in just one sample }
-                                         \DataTypeTok{write_output =} \OtherTok{NULL}\NormalTok{) }\CommentTok{# add variable names to write aligned data to text files}
+\NormalTok{mom_pup_aligned <-}\StringTok{ }\KeywordTok{align_chromatograms}\NormalTok{(}
+  \DataTypeTok{data =}\NormalTok{ all_dfs[index_MP], }\CommentTok{# input data}
+  \DataTypeTok{rt_col_name =} \StringTok{"RT"}\NormalTok{, }\CommentTok{# retention time variable name }
+  \DataTypeTok{rt_cutoff_low =} \DecValTok{15}\NormalTok{, }\CommentTok{# remove peaks below 15 Minutes}
+  \DataTypeTok{rt_cutoff_high =} \FloatTok{54.7}\NormalTok{, }\CommentTok{# remove peaks exceeding 54.7 Minutes}
+  \DataTypeTok{reference =} \StringTok{"P13"}\NormalTok{, }\CommentTok{# sample with highest overall peak number}
+  \DataTypeTok{max_linear_shift =} \FloatTok{0.05}\NormalTok{, }\CommentTok{# Premise 1: max. shift for linear corrections}
+  \DataTypeTok{max_diff_peak2mean =} \FloatTok{0.08}\NormalTok{, }\CommentTok{# Premise 2: max. distance of a peak to the mean across samples}
+  \DataTypeTok{min_diff_peak2peak =} \FloatTok{0.03}\NormalTok{, }\CommentTok{# Premise 3: min. expected distance between peaks }
+  \DataTypeTok{delete_single_peak =}\NormalTok{ T, }\CommentTok{# delete peaks that are present in just one sample }
+  \DataTypeTok{write_output =} \OtherTok{NULL}\NormalTok{) }\CommentTok{# add variable names to write aligned data to text files}
 
 \CommentTok{# Aligning six pup colonies}
-\NormalTok{pup_colonies_aligned <-}\StringTok{ }\KeywordTok{align_chromatograms}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ all_dfs[index_pupcols], }\CommentTok{# input data}
-                                         \DataTypeTok{rt_col_name =} \StringTok{"RT"}\NormalTok{, }\CommentTok{# retention time variable name }
-                                         \DataTypeTok{rt_cutoff_low =} \DecValTok{15}\NormalTok{, }\CommentTok{# remove peaks below 15 Minutes}
-                                         \DataTypeTok{rt_cutoff_high =} \FloatTok{54.7}\NormalTok{, }\CommentTok{# remove peaks exceeding 54.7 Minutes}
-                                         \DataTypeTok{reference =} \StringTok{"P13"}\NormalTok{,}\CommentTok{# sample with highest overall peak number }
-                                         \DataTypeTok{max_linear_shift =} \FloatTok{0.05}\NormalTok{, }\CommentTok{# Premise 1: max. shift for linear corrections}
-                                         \DataTypeTok{max_diff_peak2mean =} \FloatTok{0.08}\NormalTok{, }\CommentTok{# Premise 2: max. distance of a peak to the mean across samples}
-                                         \DataTypeTok{min_diff_peak2peak =} \FloatTok{0.03}\NormalTok{, }\CommentTok{# Premise 3: min. expected distance between peaks}
-                                         \DataTypeTok{delete_single_peak =}\NormalTok{ T, }\CommentTok{# delete peaks that are present in just one sample }
-                                         \DataTypeTok{write_output =} \OtherTok{NULL}\NormalTok{) }\CommentTok{# add variable names to write aligned data to text files}
+\NormalTok{pup_colonies_aligned <-}\StringTok{ }\KeywordTok{align_chromatograms}\NormalTok{(}
+  \DataTypeTok{data =}\NormalTok{ all_dfs[index_pupcols], }\CommentTok{# input data}
+  \DataTypeTok{rt_col_name =} \StringTok{"RT"}\NormalTok{, }\CommentTok{# retention time variable name }
+  \DataTypeTok{rt_cutoff_low =} \DecValTok{15}\NormalTok{, }\CommentTok{# remove peaks below 15 Minutes}
+  \DataTypeTok{rt_cutoff_high =} \FloatTok{54.7}\NormalTok{, }\CommentTok{# remove peaks exceeding 54.7 Minutes}
+  \DataTypeTok{reference =} \StringTok{"P13"}\NormalTok{,}\CommentTok{# sample with highest overall peak number }
+  \DataTypeTok{max_linear_shift =} \FloatTok{0.05}\NormalTok{, }\CommentTok{# Premise 1: max. shift for linear corrections}
+  \DataTypeTok{max_diff_peak2mean =} \FloatTok{0.08}\NormalTok{, }\CommentTok{# Premise 2: max. distance of a peak to the mean across samples}
+  \DataTypeTok{min_diff_peak2peak =} \FloatTok{0.03}\NormalTok{, }\CommentTok{# Premise 3: min. expected distance between peaks}
+  \DataTypeTok{delete_single_peak =}\NormalTok{ T, }\CommentTok{# delete peaks that are present in just one sample }
+  \DataTypeTok{write_output =} \OtherTok{NULL}\NormalTok{) }\CommentTok{# add variable names to write aligned data to text files}
 \end{Highlighting}
 \end{Shaded}
 
@@ -175,8 +183,9 @@ properties}\label{alignment-and-preliminary-data-properties}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## Load and view GCalignR alignment objects for GCMS scent data }
-\NormalTok{## in two and six breeding beaches}
+\NormalTok{## Load and view GCalignR alignment}
+\NormalTok{## objects for GCMS scent data in two and}
+\NormalTok{## six breeding beaches}
 \KeywordTok{load}\NormalTok{(}\StringTok{"RData/objects/mom_pup_alignment_GCalignR.RData"}\NormalTok{)}
 \NormalTok{mom_pup_aligned}
 \end{Highlighting}
@@ -259,19 +268,20 @@ properties}\label{alignment-and-preliminary-data-properties}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## Load raw information for all samples containing }
-\NormalTok{## raw peaks and calculate mean peak number}
+\NormalTok{## Load raw information for all samples}
+\NormalTok{## containing raw peaks and calculate mean}
+\NormalTok{## peak number}
 \KeywordTok{load}\NormalTok{(}\StringTok{"RData/objects/seal_raw_dfs.Rdata"}\NormalTok{)}
 
 \NormalTok{individual_peak_number <-}\StringTok{ }\OtherTok{NULL}
 \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(seal_dfs.list)) \{}
-\NormalTok{  individual_peak_number[i] <-}\StringTok{ }\KeywordTok{length}\NormalTok{(seal_dfs.list[[i]]}\OperatorTok{$}\NormalTok{RT)}
+\NormalTok{    individual_peak_number[i] <-}\StringTok{ }\KeywordTok{length}\NormalTok{(seal_dfs.list[[i]]}\OperatorTok{$}\NormalTok{RT)}
 \NormalTok{\}}
 
 \NormalTok{mean_ind_peaks <-}\StringTok{ }\KeywordTok{mean}\NormalTok{(individual_peak_number)}
 \NormalTok{sd_ind_peaks <-}\StringTok{ }\KeywordTok{sd}\NormalTok{(individual_peak_number)}
-\KeywordTok{cat}\NormalTok{(}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, }\StringTok{"Mean peaks:"}\NormalTok{, }\KeywordTok{as.character}\NormalTok{(mean_ind_peaks), }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, }\StringTok{"Peak SD:"}\NormalTok{, }
-    \KeywordTok{as.character}\NormalTok{(sd_ind_peaks))}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, }\StringTok{"Mean peaks:"}\NormalTok{, }\KeywordTok{as.character}\NormalTok{(mean_ind_peaks), }
+    \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, }\StringTok{"Peak SD:"}\NormalTok{, }\KeywordTok{as.character}\NormalTok{(sd_ind_peaks))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -290,55 +300,65 @@ data}\label{nmds-scaling-of-mother-pup-alignment-data}
 \KeywordTok{load}\NormalTok{(}\StringTok{"RData/objects/mom_pup_alignment_GCalignR.RData"}\NormalTok{)}
 
 \NormalTok{scent_factors_raw <-}\StringTok{ }\KeywordTok{read_delim}\NormalTok{(}\StringTok{"documents/metadata_seal_scent.txt"}\NormalTok{, }
-                                \StringTok{"}\CharTok{\textbackslash{}t}\StringTok{"}\NormalTok{, }\DataTypeTok{escape_double =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{trim_ws =} \OtherTok{TRUE}\NormalTok{)}
-\NormalTok{scent_factors_raw <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(scent_factors_raw[}\OperatorTok{-}\KeywordTok{c}\NormalTok{(}\DecValTok{194}\OperatorTok{:}\DecValTok{209}\NormalTok{),])}
+    \StringTok{"}\CharTok{\textbackslash{}t}\StringTok{"}\NormalTok{, }\DataTypeTok{escape_double =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{trim_ws =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{scent_factors_raw <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(scent_factors_raw[}\OperatorTok{-}\KeywordTok{c}\NormalTok{(}\DecValTok{194}\OperatorTok{:}\DecValTok{209}\NormalTok{), }
+\NormalTok{    ])}
 
-\CommentTok{# set sample names as row names, ensure there are no duplicates}
-\NormalTok{scent_factors <-}\StringTok{ }\NormalTok{scent_factors_raw[,}\OperatorTok{-}\DecValTok{1}\NormalTok{]}
-\KeywordTok{rownames}\NormalTok{(scent_factors) <-}\StringTok{ }\NormalTok{scent_factors_raw[,}\DecValTok{1}\NormalTok{]}
+\CommentTok{# set sample names as row names, ensure}
+\CommentTok{# there are no duplicates}
+\NormalTok{scent_factors <-}\StringTok{ }\NormalTok{scent_factors_raw[, }\OperatorTok{-}\DecValTok{1}\NormalTok{]}
+\KeywordTok{rownames}\NormalTok{(scent_factors) <-}\StringTok{ }\NormalTok{scent_factors_raw[, }
+    \DecValTok{1}\NormalTok{]}
 
 \NormalTok{## check for empty samples, i.e. no peaks}
-\NormalTok{x <-}\StringTok{ }\KeywordTok{apply}\NormalTok{(mom_pup_aligned}\OperatorTok{$}\NormalTok{aligned}\OperatorTok{$}\NormalTok{RT, }\DecValTok{2}\NormalTok{, sum)}
+\NormalTok{x <-}\StringTok{ }\KeywordTok{apply}\NormalTok{(mom_pup_aligned}\OperatorTok{$}\NormalTok{aligned}\OperatorTok{$}\NormalTok{RT, }\DecValTok{2}\NormalTok{, }
+\NormalTok{    sum)}
 \NormalTok{x <-}\StringTok{ }\KeywordTok{which}\NormalTok{(x }\OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{)}
 
 \NormalTok{## normalise area and return a data frame}
-\NormalTok{scent <-}\StringTok{ }\KeywordTok{norm_peaks}\NormalTok{(mom_pup_aligned, }\DataTypeTok{conc_col_name =} \StringTok{"Area"}\NormalTok{,}\DataTypeTok{rt_col_name =} \StringTok{"RT"}\NormalTok{,}
-                    \DataTypeTok{out =} \StringTok{"data.frame"}\NormalTok{) }
-\NormalTok{## common transformation for abundance data to reduce the extent of mean-variance trends}
-\NormalTok{scent <-}\StringTok{ }\KeywordTok{log}\NormalTok{(scent }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{) }
+\NormalTok{scent <-}\StringTok{ }\KeywordTok{norm_peaks}\NormalTok{(mom_pup_aligned, }\DataTypeTok{conc_col_name =} \StringTok{"Area"}\NormalTok{, }
+    \DataTypeTok{rt_col_name =} \StringTok{"RT"}\NormalTok{, }\DataTypeTok{out =} \StringTok{"data.frame"}\NormalTok{)}
+\NormalTok{## common transformation for abundance}
+\NormalTok{## data to reduce the extent of}
+\NormalTok{## mean-variance trends}
+\NormalTok{scent <-}\StringTok{ }\KeywordTok{log}\NormalTok{(scent }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{)}
 
 \NormalTok{## subset scent_factors}
-\NormalTok{scent_factors <-}\StringTok{ }\NormalTok{scent_factors[}\KeywordTok{rownames}\NormalTok{(scent_factors) }\OperatorTok{%in%}\StringTok{ }\KeywordTok{rownames}\NormalTok{(scent),]}
-\NormalTok{scent <-}\StringTok{ }\NormalTok{scent[}\KeywordTok{rownames}\NormalTok{(scent) }\OperatorTok{%in%}\StringTok{ }\KeywordTok{rownames}\NormalTok{(scent_factors),]}
+\NormalTok{scent_factors <-}\StringTok{ }\NormalTok{scent_factors[}\KeywordTok{rownames}\NormalTok{(scent_factors) }\OperatorTok{%in%}\StringTok{ }
+\StringTok{    }\KeywordTok{rownames}\NormalTok{(scent), ]}
+\NormalTok{scent <-}\StringTok{ }\NormalTok{scent[}\KeywordTok{rownames}\NormalTok{(scent) }\OperatorTok{%in%}\StringTok{ }\KeywordTok{rownames}\NormalTok{(scent_factors), }
+\NormalTok{    ]}
 
 \NormalTok{## keep order of rows consistent}
-\NormalTok{scent <-}\StringTok{ }\NormalTok{scent[}\KeywordTok{match}\NormalTok{(}\KeywordTok{rownames}\NormalTok{(scent_factors),}\KeywordTok{rownames}\NormalTok{(scent)),] }
+\NormalTok{scent <-}\StringTok{ }\NormalTok{scent[}\KeywordTok{match}\NormalTok{(}\KeywordTok{rownames}\NormalTok{(scent_factors), }
+    \KeywordTok{rownames}\NormalTok{(scent)), ]}
 
-\NormalTok{## get number of compounds for each individual sample after alignment}
-\NormalTok{num_comp <-}\StringTok{ }\KeywordTok{as.vector}\NormalTok{(}\KeywordTok{apply}\NormalTok{(scent, }\DecValTok{1}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\KeywordTok{length}\NormalTok{(x[x}\OperatorTok{>}\DecValTok{0}\NormalTok{]))) }
+\NormalTok{## get number of compounds for each}
+\NormalTok{## individual sample after alignment}
+\NormalTok{num_comp <-}\StringTok{ }\KeywordTok{as.vector}\NormalTok{(}\KeywordTok{apply}\NormalTok{(scent, }\DecValTok{1}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\KeywordTok{length}\NormalTok{(x[x }\OperatorTok{>}\StringTok{ }
+\StringTok{    }\DecValTok{0}\NormalTok{])))}
 
 \NormalTok{## bray-curtis similarity}
-\NormalTok{scent_nmds.obj <-}\StringTok{ }\NormalTok{vegan}\OperatorTok{::}\KeywordTok{metaMDS}\NormalTok{(}\DataTypeTok{comm =}\NormalTok{ scent, }\DataTypeTok{k =} \DecValTok{2}\NormalTok{, }\DataTypeTok{try =} \DecValTok{999}\NormalTok{, }
-                                 \DataTypeTok{trymax =} \DecValTok{9999}\NormalTok{, }\DataTypeTok{distance =} \StringTok{"bray"}\NormalTok{) }
+\NormalTok{scent_nmds.obj <-}\StringTok{ }\NormalTok{vegan}\OperatorTok{::}\KeywordTok{metaMDS}\NormalTok{(}\DataTypeTok{comm =}\NormalTok{ scent, }
+    \DataTypeTok{k =} \DecValTok{2}\NormalTok{, }\DataTypeTok{try =} \DecValTok{999}\NormalTok{, }\DataTypeTok{trymax =} \DecValTok{9999}\NormalTok{, }\DataTypeTok{distance =} \StringTok{"bray"}\NormalTok{)}
 
-\NormalTok{scent_nmds <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(scent_nmds.obj[[}\StringTok{"points"}\NormalTok{]])  }
+\NormalTok{scent_nmds <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(scent_nmds.obj[[}\StringTok{"points"}\NormalTok{]])}
 
-\NormalTok{scent_nmds <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(scent_nmds,}
-                    \DataTypeTok{age =}\NormalTok{ scent_factors[[}\StringTok{"age"}\NormalTok{]],}
-                    \DataTypeTok{tissue_tag =}\NormalTok{ scent_factors[[}\StringTok{"tissue_tag"}\NormalTok{]],}
-                    \DataTypeTok{colony =}\NormalTok{ scent_factors[[}\StringTok{"colony"}\NormalTok{]],}
-                    \DataTypeTok{family =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"family"}\NormalTok{]]),}
-                    \DataTypeTok{clr =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"clr"}\NormalTok{]]),}
-                    \DataTypeTok{shp =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"shp"}\NormalTok{]]),}
-                    \DataTypeTok{gcms =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"gcms_run"}\NormalTok{]]),}
-                    \DataTypeTok{peak_res =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"peak_res"}\NormalTok{]]),}
-                    \DataTypeTok{sample_qlty =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"sample_qlty"}\NormalTok{]]),}
-                    \DataTypeTok{vialdate =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"gcms_vialdate"}\NormalTok{]]),}
-                    \DataTypeTok{captured =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"capture_date"}\NormalTok{]]),}
-                    \DataTypeTok{sex =}\NormalTok{ scent_factors[[}\StringTok{"sex"}\NormalTok{]],}
-                    \DataTypeTok{num_comp =}\NormalTok{ num_comp)}
-\NormalTok{scent_nmds <-}\StringTok{ }\NormalTok{scent_nmds }\OperatorTok{%>%}\StringTok{ }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{BeachAge =} \KeywordTok{str_c}\NormalTok{(colony, age, }\DataTypeTok{sep =} \StringTok{"_"}\NormalTok{)) }
-\CommentTok{# creates & adds new variable BeachAge and simplifies plotting}
+\NormalTok{scent_nmds <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(scent_nmds, }\DataTypeTok{age =}\NormalTok{ scent_factors[[}\StringTok{"age"}\NormalTok{]], }
+    \DataTypeTok{tissue_tag =}\NormalTok{ scent_factors[[}\StringTok{"tissue_tag"}\NormalTok{]], }
+    \DataTypeTok{colony =}\NormalTok{ scent_factors[[}\StringTok{"colony"}\NormalTok{]], }\DataTypeTok{family =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"family"}\NormalTok{]]), }
+    \DataTypeTok{clr =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"clr"}\NormalTok{]]), }
+    \DataTypeTok{shp =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"shp"}\NormalTok{]]), }
+    \DataTypeTok{gcms =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"gcms_run"}\NormalTok{]]), }
+    \DataTypeTok{peak_res =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"peak_res"}\NormalTok{]]), }
+    \DataTypeTok{sample_qlty =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"sample_qlty"}\NormalTok{]]), }
+    \DataTypeTok{vialdate =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"gcms_vialdate"}\NormalTok{]]), }
+    \DataTypeTok{captured =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"capture_date"}\NormalTok{]]), }
+    \DataTypeTok{sex =}\NormalTok{ scent_factors[[}\StringTok{"sex"}\NormalTok{]], }\DataTypeTok{num_comp =}\NormalTok{ num_comp)}
+\NormalTok{scent_nmds <-}\StringTok{ }\NormalTok{scent_nmds }\OperatorTok{%>%}\StringTok{ }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{BeachAge =} \KeywordTok{str_c}\NormalTok{(colony, }
+\NormalTok{    age, }\DataTypeTok{sep =} \StringTok{"_"}\NormalTok{))}
+\CommentTok{# creates & adds new variable BeachAge}
+\CommentTok{# and simplifies plotting}
 \end{Highlighting}
 \end{Shaded}
 
@@ -351,22 +371,24 @@ pairs}\label{colony-and-family-membership-in-ssb-and-fwb-mom-pup-pairs}
 
 \NormalTok{## colony membership plot}
 \NormalTok{mp_colony_gg <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ scent_nmds) }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{size =} \FloatTok{4.5}\NormalTok{, }\KeywordTok{aes}\NormalTok{(MDS1, MDS2, }\DataTypeTok{color =}\NormalTok{ BeachAge, }\DataTypeTok{shape =}\NormalTok{ BeachAge)) }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\KeywordTok{scale_shape_manual}\NormalTok{(}\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\DecValTok{19}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{19}\NormalTok{, }\DecValTok{1}\NormalTok{), }
-                     \DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"FWB mothers "}\NormalTok{, }\StringTok{"FWB pups "}\NormalTok{, }
-                                \StringTok{"SSB mothers "}\NormalTok{, }\StringTok{"SSB pups "}\NormalTok{)) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{scale_color_manual}\NormalTok{(}\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"#D55E00"}\NormalTok{, }\StringTok{"#D55E00"}\NormalTok{, }\StringTok{"#56B4E9"}\NormalTok{, }\StringTok{"#56B4E9"}\NormalTok{), }
-                     \DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"FWB mothers "}\NormalTok{, }\StringTok{"FWB pups "}\NormalTok{, }
-                                \StringTok{"SSB mothers "}\NormalTok{, }\StringTok{"SSB pups "}\NormalTok{)) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{theme_void}\NormalTok{() }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\KeywordTok{ylim}\NormalTok{(}\OperatorTok{-}\FloatTok{0.75}\NormalTok{,}\FloatTok{1.1}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{annotate}\NormalTok{(}\StringTok{"text"}\NormalTok{, }\DataTypeTok{x =} \FloatTok{0.64}\NormalTok{, }\DataTypeTok{y =} \FloatTok{1.1}\NormalTok{, }\DataTypeTok{label =} \StringTok{"A"}\NormalTok{, }\DataTypeTok{size =} \DecValTok{5}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{annotate}\NormalTok{(}\StringTok{"text"}\NormalTok{, }\DataTypeTok{x =} \FloatTok{0.47}\NormalTok{, }\DataTypeTok{y =} \OperatorTok{-}\FloatTok{0.74}\NormalTok{, }\DataTypeTok{label =} \StringTok{"2D Stress: 0.23"}\NormalTok{, }\DataTypeTok{size =} \DecValTok{4}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{panel.background =} \KeywordTok{element_rect}\NormalTok{(}\DataTypeTok{colour =} \StringTok{"black"}\NormalTok{, }\DataTypeTok{size =} \DecValTok{1}\NormalTok{, }\DataTypeTok{fill =} \OtherTok{NA}\NormalTok{),}
-        \DataTypeTok{aspect.ratio =} \DecValTok{1}\NormalTok{,}
-        \DataTypeTok{legend.position =} \StringTok{"none"}\NormalTok{,}
-        \DataTypeTok{legend.title =} \KeywordTok{element_blank}\NormalTok{(),}
-        \DataTypeTok{legend.background =} \KeywordTok{element_rect}\NormalTok{(}\DataTypeTok{size =} \FloatTok{0.3}\NormalTok{, }\DataTypeTok{linetype =} \StringTok{"solid"}\NormalTok{, }\DataTypeTok{color =} \StringTok{"black"}\NormalTok{)) }
+\StringTok{    }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{size =} \FloatTok{4.5}\NormalTok{, }\KeywordTok{aes}\NormalTok{(MDS1, MDS2, }
+        \DataTypeTok{color =}\NormalTok{ BeachAge, }\DataTypeTok{shape =}\NormalTok{ BeachAge)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{scale_shape_manual}\NormalTok{(}\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\DecValTok{19}\NormalTok{, }\DecValTok{1}\NormalTok{, }
+        \DecValTok{19}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"FWB mothers "}\NormalTok{, }
+        \StringTok{"FWB pups "}\NormalTok{, }\StringTok{"SSB mothers "}\NormalTok{, }\StringTok{"SSB pups "}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{scale_color_manual}\NormalTok{(}\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"#D55E00"}\NormalTok{, }
+        \StringTok{"#D55E00"}\NormalTok{, }\StringTok{"#56B4E9"}\NormalTok{, }\StringTok{"#56B4E9"}\NormalTok{), }
+        \DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"FWB mothers "}\NormalTok{, }\StringTok{"FWB pups "}\NormalTok{, }
+            \StringTok{"SSB mothers "}\NormalTok{, }\StringTok{"SSB pups "}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{theme_void}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{ylim}\NormalTok{(}\OperatorTok{-}\FloatTok{0.75}\NormalTok{, }\FloatTok{1.1}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{annotate}\NormalTok{(}\StringTok{"text"}\NormalTok{, }
+    \DataTypeTok{x =} \FloatTok{0.64}\NormalTok{, }\DataTypeTok{y =} \FloatTok{1.1}\NormalTok{, }\DataTypeTok{label =} \StringTok{"A"}\NormalTok{, }\DataTypeTok{size =} \DecValTok{5}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{annotate}\NormalTok{(}\StringTok{"text"}\NormalTok{, }\DataTypeTok{x =} \FloatTok{0.47}\NormalTok{, }\DataTypeTok{y =} \OperatorTok{-}\FloatTok{0.74}\NormalTok{, }
+        \DataTypeTok{label =} \StringTok{"2D Stress: 0.23"}\NormalTok{, }\DataTypeTok{size =} \DecValTok{4}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{panel.background =} \KeywordTok{element_rect}\NormalTok{(}\DataTypeTok{colour =} \StringTok{"black"}\NormalTok{, }
+        \DataTypeTok{size =} \DecValTok{1}\NormalTok{, }\DataTypeTok{fill =} \OtherTok{NA}\NormalTok{), }\DataTypeTok{aspect.ratio =} \DecValTok{1}\NormalTok{, }
+        \DataTypeTok{legend.position =} \StringTok{"none"}\NormalTok{, }\DataTypeTok{legend.title =} \KeywordTok{element_blank}\NormalTok{(), }
+        \DataTypeTok{legend.background =} \KeywordTok{element_rect}\NormalTok{(}\DataTypeTok{size =} \FloatTok{0.3}\NormalTok{, }
+            \DataTypeTok{linetype =} \StringTok{"solid"}\NormalTok{, }\DataTypeTok{color =} \StringTok{"black"}\NormalTok{))}
 \CommentTok{# call colony membership plot}
 \NormalTok{mp_colony_gg}
 \end{Highlighting}
@@ -376,39 +398,46 @@ pairs}\label{colony-and-family-membership-in-ssb-and-fwb-mom-pup-pairs}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## mother-offspring similarity plot}
-\CommentTok{# create color palette for the plot}
-\NormalTok{clr <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"#D55E00"}\NormalTok{, }\StringTok{"red"}\NormalTok{, }\StringTok{"#56B4E9"}\NormalTok{, }\StringTok{"#009E73"}\NormalTok{,}\StringTok{"#000000"}\NormalTok{, }\StringTok{"#CC79A7"}\NormalTok{) }
+\NormalTok{## mother-offspring similarity plot create}
+\NormalTok{## color palette for the plot}
+\NormalTok{clr <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"#D55E00"}\NormalTok{, }\StringTok{"red"}\NormalTok{, }\StringTok{"#56B4E9"}\NormalTok{, }\StringTok{"#009E73"}\NormalTok{, }
+    \StringTok{"#000000"}\NormalTok{, }\StringTok{"#CC79A7"}\NormalTok{)}
 
 \CommentTok{# assign pch values for plotting}
-\NormalTok{shp <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{7}\NormalTok{,}\DecValTok{10}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{6}\NormalTok{,}\DecValTok{18}\NormalTok{,}\DecValTok{16}\NormalTok{,}\DecValTok{17}\NormalTok{,}\DecValTok{15}\NormalTok{) }
+\NormalTok{shp <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{7}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{18}\NormalTok{, }\DecValTok{16}\NormalTok{, }\DecValTok{17}\NormalTok{, }
+    \DecValTok{15}\NormalTok{)}
 
 \CommentTok{# create unique color-pch pairs}
-\NormalTok{color_shape_pairs <-}\StringTok{ }\KeywordTok{crossing}\NormalTok{(clr,shp) }
+\NormalTok{color_shape_pairs <-}\StringTok{ }\KeywordTok{crossing}\NormalTok{(clr, shp)}
 
-\CommentTok{# randomly sample 50 unique pairs (sample without replacement)}
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{) }\CommentTok{# always get same pairs in a run}
-\NormalTok{color_shape_pairs <-}\StringTok{ }\NormalTok{color_shape_pairs[}\KeywordTok{sample}\NormalTok{(}\KeywordTok{nrow}\NormalTok{(color_shape_pairs), }\DecValTok{50}\NormalTok{),] }
+\CommentTok{# randomly sample 50 unique pairs (sample}
+\CommentTok{# without replacement)}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)  }\CommentTok{# always get same pairs in a run}
+\NormalTok{color_shape_pairs <-}\StringTok{ }\NormalTok{color_shape_pairs[}\KeywordTok{sample}\NormalTok{(}\KeywordTok{nrow}\NormalTok{(color_shape_pairs), }
+    \DecValTok{50}\NormalTok{), ]}
 
-\CommentTok{# assign new dataframes to transform scent_nmds$clr & shp with the unique values we created}
-\NormalTok{color_shape_pairs_plot <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(color_shape_pairs[}\DecValTok{1}\OperatorTok{:}\DecValTok{25}\NormalTok{,],color_shape_pairs[}\DecValTok{1}\OperatorTok{:}\DecValTok{7}\NormalTok{,]}
-\NormalTok{                                ,color_shape_pairs[}\DecValTok{7}\NormalTok{,],  color_shape_pairs[}\DecValTok{8}\OperatorTok{:}\DecValTok{25}\NormalTok{,], }
-\NormalTok{                                color_shape_pairs[}\DecValTok{26}\OperatorTok{:}\DecValTok{50}\NormalTok{,], color_shape_pairs[}\DecValTok{26}\OperatorTok{:}\DecValTok{50}\NormalTok{,])}
+\CommentTok{# assign new dataframes to transform}
+\CommentTok{# scent_nmds$clr & shp with the unique}
+\CommentTok{# values we created}
+\NormalTok{color_shape_pairs_plot <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(color_shape_pairs[}\DecValTok{1}\OperatorTok{:}\DecValTok{25}\NormalTok{, }
+\NormalTok{    ], color_shape_pairs[}\DecValTok{1}\OperatorTok{:}\DecValTok{7}\NormalTok{, ], color_shape_pairs[}\DecValTok{7}\NormalTok{, }
+\NormalTok{    ], color_shape_pairs[}\DecValTok{8}\OperatorTok{:}\DecValTok{25}\NormalTok{, ], color_shape_pairs[}\DecValTok{26}\OperatorTok{:}\DecValTok{50}\NormalTok{, }
+\NormalTok{    ], color_shape_pairs[}\DecValTok{26}\OperatorTok{:}\DecValTok{50}\NormalTok{, ])}
 \NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{clr <-}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(color_shape_pairs_plot}\OperatorTok{$}\NormalTok{clr)}
 \NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{shp <-}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(color_shape_pairs_plot}\OperatorTok{$}\NormalTok{shp)}
 
 \CommentTok{# call family plot}
-\NormalTok{mp_family_gg <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ scent_nmds,}\KeywordTok{aes}\NormalTok{(MDS1,MDS2, }\DataTypeTok{color =}\NormalTok{ clr, }\DataTypeTok{shape =}\NormalTok{ shp)) }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{size =} \FloatTok{4.5}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{scale_shape_manual}\NormalTok{(}\DataTypeTok{values =} \KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{levels}\NormalTok{(scent_nmds}\OperatorTok{$}\NormalTok{shp))) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{theme_void}\NormalTok{() }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\KeywordTok{ylim}\NormalTok{(}\OperatorTok{-}\FloatTok{0.75}\NormalTok{,}\FloatTok{1.1}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{scale_color_manual}\NormalTok{(}\DataTypeTok{values =} \KeywordTok{levels}\NormalTok{(scent_nmds}\OperatorTok{$}\NormalTok{clr)) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{annotate}\NormalTok{(}\StringTok{"text"}\NormalTok{, }\DataTypeTok{x =} \FloatTok{0.64}\NormalTok{, }\DataTypeTok{y =} \FloatTok{1.1}\NormalTok{, }\DataTypeTok{label =} \StringTok{"B"}\NormalTok{, }\DataTypeTok{size =} \DecValTok{5}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{annotate}\NormalTok{(}\StringTok{"text"}\NormalTok{, }\DataTypeTok{x =} \FloatTok{0.48}\NormalTok{, }\DataTypeTok{y =} \OperatorTok{-}\FloatTok{0.74}\NormalTok{, }\DataTypeTok{label =} \StringTok{"2D Stress: 0.23"}\NormalTok{, }\DataTypeTok{size =} \DecValTok{4}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{panel.background =} \KeywordTok{element_rect}\NormalTok{(}\DataTypeTok{colour =} \StringTok{"black"}\NormalTok{, }\DataTypeTok{size =} \DecValTok{1}\NormalTok{,}
-                                        \DataTypeTok{fill =} \OtherTok{NA}\NormalTok{), }\DataTypeTok{aspect.ratio =} \DecValTok{1}\NormalTok{, }
-        \DataTypeTok{legend.position =} \StringTok{"none"}\NormalTok{) }
+\NormalTok{mp_family_gg <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ scent_nmds, }
+    \KeywordTok{aes}\NormalTok{(MDS1, MDS2, }\DataTypeTok{color =}\NormalTok{ clr, }\DataTypeTok{shape =}\NormalTok{ shp)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{size =} \FloatTok{4.5}\NormalTok{) }\OperatorTok{+}\StringTok{ }\CommentTok{# geom_line() +}
+\KeywordTok{scale_shape_manual}\NormalTok{(}\DataTypeTok{values =} \KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{levels}\NormalTok{(scent_nmds}\OperatorTok{$}\NormalTok{shp))) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{theme_void}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{ylim}\NormalTok{(}\OperatorTok{-}\FloatTok{0.75}\NormalTok{, }\FloatTok{1.1}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_color_manual}\NormalTok{(}\DataTypeTok{values =} \KeywordTok{levels}\NormalTok{(scent_nmds}\OperatorTok{$}\NormalTok{clr)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{annotate}\NormalTok{(}\StringTok{"text"}\NormalTok{, }\DataTypeTok{x =} \FloatTok{0.64}\NormalTok{, }\DataTypeTok{y =} \FloatTok{1.1}\NormalTok{, }\DataTypeTok{label =} \StringTok{"B"}\NormalTok{, }
+        \DataTypeTok{size =} \DecValTok{5}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{annotate}\NormalTok{(}\StringTok{"text"}\NormalTok{, }\DataTypeTok{x =} \FloatTok{0.48}\NormalTok{, }
+    \DataTypeTok{y =} \OperatorTok{-}\FloatTok{0.74}\NormalTok{, }\DataTypeTok{label =} \StringTok{"2D Stress: 0.23"}\NormalTok{, }
+    \DataTypeTok{size =} \DecValTok{4}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{panel.background =} \KeywordTok{element_rect}\NormalTok{(}\DataTypeTok{colour =} \StringTok{"black"}\NormalTok{, }
+    \DataTypeTok{size =} \DecValTok{1}\NormalTok{, }\DataTypeTok{fill =} \OtherTok{NA}\NormalTok{), }\DataTypeTok{aspect.ratio =} \DecValTok{1}\NormalTok{, }
+    \DataTypeTok{legend.position =} \StringTok{"none"}\NormalTok{)}
 \NormalTok{mp_family_gg}
 \end{Highlighting}
 \end{Shaded}
@@ -420,22 +449,25 @@ membership}\label{permanova-for-mother-pup-similiarity-and-colony-membership}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# set seed to reproduce the same outcome (can vary due to different permutations!)}
+\CommentTok{# set seed to reproduce the same outcome}
+\CommentTok{# (can vary due to different}
+\CommentTok{# permutations!)}
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
 
 \CommentTok{# set counter for while loop}
 \NormalTok{perm_count <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{99}\NormalTok{)}
 
-\CommentTok{# iterate different significance levels with a while-loop}
-\ControlFlowTok{while}\NormalTok{ (perm_count }\OperatorTok{<=}\StringTok{ }\DecValTok{99999}\NormalTok{) \{}\CommentTok{# end while-loop after the run for 99999 permutations}
-\NormalTok{  permanova_result_MP <-}\StringTok{ }\KeywordTok{adonis}\NormalTok{(scent }\OperatorTok{~}\StringTok{ }\NormalTok{age}\OperatorTok{+}\NormalTok{colony}\OperatorTok{+}\NormalTok{colony}\OperatorTok{:}\NormalTok{family, }
-         \DataTypeTok{data =}\NormalTok{ scent_factors,}
-         \DataTypeTok{method =} \StringTok{"bray"}\NormalTok{,}
-         \DataTypeTok{permutations =}\NormalTok{ perm_count)}
-  \KeywordTok{print}\NormalTok{(permanova_result_MP)}
-  
-\NormalTok{  perm_count <-}\StringTok{ }\NormalTok{(perm_count}\OperatorTok{*}\DecValTok{10}\NormalTok{)}\OperatorTok{+}\DecValTok{9} \CommentTok{# ends while-iteration after it increases to 999999}
-\NormalTok{\}}\CommentTok{#while}
+\CommentTok{# iterate different significance levels}
+\CommentTok{# with a while-loop end while-loop after}
+\CommentTok{# the run for 99999 permutations}
+\ControlFlowTok{while}\NormalTok{ (perm_count }\OperatorTok{<=}\StringTok{ }\DecValTok{99999}\NormalTok{) \{}
+\NormalTok{    permanova_result_MP <-}\StringTok{ }\KeywordTok{adonis}\NormalTok{(scent }\OperatorTok{~}\StringTok{ }
+\StringTok{        }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{colony }\OperatorTok{+}\StringTok{ }\NormalTok{colony}\OperatorTok{:}\NormalTok{family, }\DataTypeTok{data =}\NormalTok{ scent_factors, }
+        \DataTypeTok{method =} \StringTok{"bray"}\NormalTok{, }\DataTypeTok{permutations =}\NormalTok{ perm_count)}
+    \KeywordTok{print}\NormalTok{(permanova_result_MP)}
+    
+\NormalTok{    perm_count <-}\StringTok{ }\NormalTok{(perm_count }\OperatorTok{*}\StringTok{ }\DecValTok{10}\NormalTok{) }\OperatorTok{+}\StringTok{ }\DecValTok{9}  \CommentTok{# ends while-iteration after it increases to 999999}
+\NormalTok{\}  }\CommentTok{#while}
 \end{Highlighting}
 \end{Shaded}
 
@@ -515,9 +547,10 @@ PERMANOVA results
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# test for group dispersal}
-\CommentTok{# for different colonies}
-\NormalTok{mod_colony  <-}\StringTok{ }\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent), scent_factors}\OperatorTok{$}\NormalTok{colony, }\DataTypeTok{type =} \StringTok{"median"}\NormalTok{)}
+\CommentTok{# test for group dispersal for different}
+\CommentTok{# colonies}
+\NormalTok{mod_colony <-}\StringTok{ }\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent), }
+\NormalTok{    scent_factors}\OperatorTok{$}\NormalTok{colony, }\DataTypeTok{type =} \StringTok{"median"}\NormalTok{)}
 \KeywordTok{anova}\NormalTok{(mod_colony)}
 \end{Highlighting}
 \end{Shaded}
@@ -536,7 +569,8 @@ PERMANOVA results
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# for different ages (mom vs pup)}
-\NormalTok{mod_age <-}\StringTok{ }\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent), scent_factors}\OperatorTok{$}\NormalTok{age, }\DataTypeTok{type =} \StringTok{"median"}\NormalTok{)}
+\NormalTok{mod_age <-}\StringTok{ }\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent), scent_factors}\OperatorTok{$}\NormalTok{age, }
+    \DataTypeTok{type =} \StringTok{"median"}\NormalTok{)}
 \KeywordTok{anova}\NormalTok{(mod_age)}
 \end{Highlighting}
 \end{Shaded}
@@ -552,8 +586,10 @@ PERMANOVA results
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# for different combinations of age and colony identity}
-\NormalTok{mod_BeachAge <-}\StringTok{ }\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent), scent_nmds}\OperatorTok{$}\NormalTok{BeachAge, }\DataTypeTok{type =} \StringTok{"median"}\NormalTok{)}
+\CommentTok{# for different combinations of age and}
+\CommentTok{# colony identity}
+\NormalTok{mod_BeachAge <-}\StringTok{ }\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent), }
+\NormalTok{    scent_nmds}\OperatorTok{$}\NormalTok{BeachAge, }\DataTypeTok{type =} \StringTok{"median"}\NormalTok{)}
 \KeywordTok{anova}\NormalTok{(mod_BeachAge)}
 \end{Highlighting}
 \end{Shaded}
@@ -572,8 +608,9 @@ pairs based on colony identity and age
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{) }\CommentTok{# for comparability as results do not change when compared to manuscript}
-\NormalTok{pairwiseAdonis}\OperatorTok{::}\KeywordTok{pairwise.adonis}\NormalTok{(scent, scent_nmds}\OperatorTok{$}\NormalTok{BeachAge, }\DataTypeTok{perm =} \DecValTok{99999}\NormalTok{)}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)  }\CommentTok{# for comparability as results do not change when compared to manuscript}
+\NormalTok{pairwiseAdonis}\OperatorTok{::}\KeywordTok{pairwise.adonis}\NormalTok{(scent, scent_nmds}\OperatorTok{$}\NormalTok{BeachAge, }
+    \DataTypeTok{perm =} \DecValTok{99999}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -591,13 +628,18 @@ pairs based on colony identity and age
 \begin{Highlighting}[]
 \CommentTok{# Pairwise group dispersal tests}
 
-\CommentTok{# scent, scent_factors and scent_nmds are all data.frames the have the same row setup.}
-\CommentTok{# Meaning: Each row respresenting an individual is identical in each data.frame.}
-\CommentTok{# Thus, we can index pairs based on scent_nmds$BeachAge manually.}
+\CommentTok{# scent, scent_factors and scent_nmds are}
+\CommentTok{# all data.frames the have the same row}
+\CommentTok{# setup.  Meaning: Each row respresenting}
+\CommentTok{# an individual is identical in each}
+\CommentTok{# data.frame.  Thus, we can index pairs}
+\CommentTok{# based on scent_nmds$BeachAge manually.}
 
-\NormalTok{pairwise_betadisper1 <-}\StringTok{ }\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "SSB_1"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "SSB_2"}\NormalTok{,]), }
-\NormalTok{                            scent_nmds}\OperatorTok{$}\NormalTok{BeachAge[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "SSB_1"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "SSB_2"}\NormalTok{],}
-                            \DataTypeTok{type =} \StringTok{"median"}\NormalTok{)}
+\NormalTok{pairwise_betadisper1 <-}\StringTok{ }\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ }
+\StringTok{    "SSB_1"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "SSB_2"}\NormalTok{, }
+\NormalTok{    ]), scent_nmds}\OperatorTok{$}\NormalTok{BeachAge[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ }
+\StringTok{    "SSB_1"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "SSB_2"}\NormalTok{], }
+    \DataTypeTok{type =} \StringTok{"median"}\NormalTok{)}
 \KeywordTok{anova}\NormalTok{(pairwise_betadisper1)}
 \end{Highlighting}
 \end{Shaded}
@@ -613,9 +655,11 @@ pairs based on colony identity and age
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{pairwise_betadisper2 <-}\StringTok{ }\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "SSB_1"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_1"}\NormalTok{,]), }
-\NormalTok{                            scent_nmds}\OperatorTok{$}\NormalTok{BeachAge[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "SSB_1"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_1"}\NormalTok{],}
-                            \DataTypeTok{type =} \StringTok{"median"}\NormalTok{)}
+\NormalTok{pairwise_betadisper2 <-}\StringTok{ }\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ }
+\StringTok{    "SSB_1"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_1"}\NormalTok{, }
+\NormalTok{    ]), scent_nmds}\OperatorTok{$}\NormalTok{BeachAge[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ }
+\StringTok{    "SSB_1"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_1"}\NormalTok{], }
+    \DataTypeTok{type =} \StringTok{"median"}\NormalTok{)}
 \KeywordTok{anova}\NormalTok{(pairwise_betadisper2)}
 \end{Highlighting}
 \end{Shaded}
@@ -633,9 +677,11 @@ pairs based on colony identity and age
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{pairwise_betadisper3 <-}\StringTok{ }\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "SSB_1"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_2"}\NormalTok{,]), }
-\NormalTok{                            scent_nmds}\OperatorTok{$}\NormalTok{BeachAge[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "SSB_1"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_2"}\NormalTok{],}
-                            \DataTypeTok{type =} \StringTok{"median"}\NormalTok{)}
+\NormalTok{pairwise_betadisper3 <-}\StringTok{ }\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ }
+\StringTok{    "SSB_1"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_2"}\NormalTok{, }
+\NormalTok{    ]), scent_nmds}\OperatorTok{$}\NormalTok{BeachAge[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ }
+\StringTok{    "SSB_1"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_2"}\NormalTok{], }
+    \DataTypeTok{type =} \StringTok{"median"}\NormalTok{)}
 \KeywordTok{anova}\NormalTok{(pairwise_betadisper3)}
 \end{Highlighting}
 \end{Shaded}
@@ -651,9 +697,11 @@ pairs based on colony identity and age
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{pairwise_betadisper4 <-}\StringTok{ }\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "SSB_2"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_1"}\NormalTok{,]), }
-\NormalTok{                            scent_nmds}\OperatorTok{$}\NormalTok{BeachAge[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "SSB_2"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_1"}\NormalTok{],}
-                            \DataTypeTok{type =} \StringTok{"median"}\NormalTok{)}
+\NormalTok{pairwise_betadisper4 <-}\StringTok{ }\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ }
+\StringTok{    "SSB_2"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_1"}\NormalTok{, }
+\NormalTok{    ]), scent_nmds}\OperatorTok{$}\NormalTok{BeachAge[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ }
+\StringTok{    "SSB_2"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_1"}\NormalTok{], }
+    \DataTypeTok{type =} \StringTok{"median"}\NormalTok{)}
 \KeywordTok{anova}\NormalTok{(pairwise_betadisper4)}
 \end{Highlighting}
 \end{Shaded}
@@ -671,9 +719,11 @@ pairs based on colony identity and age
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{pairwise_betadisper5 <-}\StringTok{ }\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "SSB_2"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_2"}\NormalTok{,]), }
-\NormalTok{                            scent_nmds}\OperatorTok{$}\NormalTok{BeachAge[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "SSB_2"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_2"}\NormalTok{],}
-                            \DataTypeTok{type =} \StringTok{"median"}\NormalTok{)}
+\NormalTok{pairwise_betadisper5 <-}\StringTok{ }\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ }
+\StringTok{    "SSB_2"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_2"}\NormalTok{, }
+\NormalTok{    ]), scent_nmds}\OperatorTok{$}\NormalTok{BeachAge[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ }
+\StringTok{    "SSB_2"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_2"}\NormalTok{], }
+    \DataTypeTok{type =} \StringTok{"median"}\NormalTok{)}
 \KeywordTok{anova}\NormalTok{(pairwise_betadisper5)}
 \end{Highlighting}
 \end{Shaded}
@@ -689,9 +739,11 @@ pairs based on colony identity and age
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{pairwise_betadisper6 <-}\StringTok{ }\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_1"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_2"}\NormalTok{,]), }
-\NormalTok{                            scent_nmds}\OperatorTok{$}\NormalTok{BeachAge[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_1"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_2"}\NormalTok{],}
-                            \DataTypeTok{type =} \StringTok{"median"}\NormalTok{)}
+\NormalTok{pairwise_betadisper6 <-}\StringTok{ }\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ }
+\StringTok{    "FWB_1"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_2"}\NormalTok{, }
+\NormalTok{    ]), scent_nmds}\OperatorTok{$}\NormalTok{BeachAge[scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ }
+\StringTok{    "FWB_1"} \OperatorTok{|}\StringTok{ }\NormalTok{scent_nmds}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_2"}\NormalTok{], }
+    \DataTypeTok{type =} \StringTok{"median"}\NormalTok{)}
 \KeywordTok{anova}\NormalTok{(pairwise_betadisper6)}
 \end{Highlighting}
 \end{Shaded}
@@ -705,6 +757,26 @@ pairs based on colony identity and age
 ## Residuals 48 0.32807 0.0068347
 \end{verbatim}
 
+Bonferroni correction for pairwise betadisper
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# get p-values for betadisper (same}
+\CommentTok{# order)}
+\NormalTok{betadisper_sig_values <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\FloatTok{0.7504}\NormalTok{, }\FloatTok{0.06678}\NormalTok{, }
+    \FloatTok{0.3341}\NormalTok{, }\FloatTok{0.03738}\NormalTok{, }\FloatTok{0.2077}\NormalTok{, }\FloatTok{0.3618}\NormalTok{)}
+
+\CommentTok{# correct p-values based on Bonferroni}
+\NormalTok{corrected_betadisper_sig_values <-}\StringTok{ }\KeywordTok{p.adjust}\NormalTok{(betadisper_sig_values, }
+    \DataTypeTok{method =} \StringTok{"bonferroni"}\NormalTok{)}
+\NormalTok{corrected_betadisper_sig_values}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1.00000 0.40068 1.00000 0.22428 1.00000 1.00000
+\end{verbatim}
+
 \subsection{NMDS scaling and colony membership in six pup
 colonies}\label{nmds-scaling-and-colony-membership-in-six-pup-colonies}
 
@@ -712,59 +784,73 @@ colonies}\label{nmds-scaling-and-colony-membership-in-six-pup-colonies}
 \begin{Highlighting}[]
 \KeywordTok{load}\NormalTok{(}\StringTok{"RData/objects/pup_colonies_alignment_GCalignR.RData"}\NormalTok{)}
 \NormalTok{scent_factors_raw <-}\StringTok{ }\KeywordTok{read_delim}\NormalTok{(}\StringTok{"documents/metadata_seal_scent.txt"}\NormalTok{, }
-                                \StringTok{"}\CharTok{\textbackslash{}t}\StringTok{"}\NormalTok{, }\DataTypeTok{escape_double =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{trim_ws =} \OtherTok{TRUE}\NormalTok{)}
-\NormalTok{scent_factors_raw <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(scent_factors_raw[}\OperatorTok{-}\KeywordTok{c}\NormalTok{(}\DecValTok{194}\OperatorTok{:}\DecValTok{209}\NormalTok{),])}
+    \StringTok{"}\CharTok{\textbackslash{}t}\StringTok{"}\NormalTok{, }\DataTypeTok{escape_double =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{trim_ws =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{scent_factors_raw <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(scent_factors_raw[}\OperatorTok{-}\KeywordTok{c}\NormalTok{(}\DecValTok{194}\OperatorTok{:}\DecValTok{209}\NormalTok{), }
+\NormalTok{    ])}
 
-\CommentTok{# set sample names as row names, ensure there are no duplicates}
-\NormalTok{scent_factors <-}\StringTok{ }\NormalTok{scent_factors_raw[,}\OperatorTok{-}\DecValTok{1}\NormalTok{]}
-\KeywordTok{rownames}\NormalTok{(scent_factors) <-}\StringTok{ }\NormalTok{scent_factors_raw[,}\DecValTok{1}\NormalTok{]}
+\CommentTok{# set sample names as row names, ensure}
+\CommentTok{# there are no duplicates}
+\NormalTok{scent_factors <-}\StringTok{ }\NormalTok{scent_factors_raw[, }\OperatorTok{-}\DecValTok{1}\NormalTok{]}
+\KeywordTok{rownames}\NormalTok{(scent_factors) <-}\StringTok{ }\NormalTok{scent_factors_raw[, }
+    \DecValTok{1}\NormalTok{]}
 
 \NormalTok{## check for empty samples, i.e. no peaks}
-\NormalTok{x <-}\StringTok{ }\KeywordTok{apply}\NormalTok{(pup_colonies_aligned}\OperatorTok{$}\NormalTok{aligned}\OperatorTok{$}\NormalTok{RT, }\DecValTok{2}\NormalTok{, sum)}
+\NormalTok{x <-}\StringTok{ }\KeywordTok{apply}\NormalTok{(pup_colonies_aligned}\OperatorTok{$}\NormalTok{aligned}\OperatorTok{$}\NormalTok{RT, }
+    \DecValTok{2}\NormalTok{, sum)}
 \NormalTok{x <-}\StringTok{ }\KeywordTok{which}\NormalTok{(x }\OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{)}
 
 \NormalTok{## normalise area and return a data frame}
-\NormalTok{scent <-}\StringTok{ }\KeywordTok{norm_peaks}\NormalTok{(pup_colonies_aligned, }\DataTypeTok{conc_col_name =} \StringTok{"Area"}\NormalTok{,}\DataTypeTok{rt_col_name =} \StringTok{"RT"}\NormalTok{,}
-                    \DataTypeTok{out =} \StringTok{"data.frame"}\NormalTok{) }
-\NormalTok{## common transformation for abundance data to reduce the extent of mean-variance trends}
-\NormalTok{scent <-}\StringTok{ }\KeywordTok{log}\NormalTok{(scent }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{) }
+\NormalTok{scent <-}\StringTok{ }\KeywordTok{norm_peaks}\NormalTok{(pup_colonies_aligned, }
+    \DataTypeTok{conc_col_name =} \StringTok{"Area"}\NormalTok{, }\DataTypeTok{rt_col_name =} \StringTok{"RT"}\NormalTok{, }
+    \DataTypeTok{out =} \StringTok{"data.frame"}\NormalTok{)}
+\NormalTok{## common transformation for abundance}
+\NormalTok{## data to reduce the extent of}
+\NormalTok{## mean-variance trends}
+\NormalTok{scent <-}\StringTok{ }\KeywordTok{log}\NormalTok{(scent }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{)}
 
 \NormalTok{## subset scent_factors}
-\NormalTok{scent_factors <-}\StringTok{ }\NormalTok{scent_factors[}\KeywordTok{rownames}\NormalTok{(scent_factors) }\OperatorTok{%in%}\StringTok{ }\KeywordTok{rownames}\NormalTok{(scent),]}
-\NormalTok{scent <-}\StringTok{ }\NormalTok{scent[}\KeywordTok{rownames}\NormalTok{(scent) }\OperatorTok{%in%}\StringTok{ }\KeywordTok{rownames}\NormalTok{(scent_factors),]}
+\NormalTok{scent_factors <-}\StringTok{ }\NormalTok{scent_factors[}\KeywordTok{rownames}\NormalTok{(scent_factors) }\OperatorTok{%in%}\StringTok{ }
+\StringTok{    }\KeywordTok{rownames}\NormalTok{(scent), ]}
+\NormalTok{scent <-}\StringTok{ }\NormalTok{scent[}\KeywordTok{rownames}\NormalTok{(scent) }\OperatorTok{%in%}\StringTok{ }\KeywordTok{rownames}\NormalTok{(scent_factors), }
+\NormalTok{    ]}
 
 \NormalTok{## keep order of rows consistent}
-\NormalTok{scent <-}\StringTok{ }\NormalTok{scent[}\KeywordTok{match}\NormalTok{(}\KeywordTok{rownames}\NormalTok{(scent_factors),}\KeywordTok{rownames}\NormalTok{(scent)),] }
+\NormalTok{scent <-}\StringTok{ }\NormalTok{scent[}\KeywordTok{match}\NormalTok{(}\KeywordTok{rownames}\NormalTok{(scent_factors), }
+    \KeywordTok{rownames}\NormalTok{(scent)), ]}
 
-\NormalTok{## get number of compounds for each individual sample after alignment}
-\NormalTok{num_comp <-}\StringTok{ }\KeywordTok{as.vector}\NormalTok{(}\KeywordTok{apply}\NormalTok{(scent, }\DecValTok{1}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\KeywordTok{length}\NormalTok{(x[x}\OperatorTok{>}\DecValTok{0}\NormalTok{])))}
+\NormalTok{## get number of compounds for each}
+\NormalTok{## individual sample after alignment}
+\NormalTok{num_comp <-}\StringTok{ }\KeywordTok{as.vector}\NormalTok{(}\KeywordTok{apply}\NormalTok{(scent, }\DecValTok{1}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\KeywordTok{length}\NormalTok{(x[x }\OperatorTok{>}\StringTok{ }
+\StringTok{    }\DecValTok{0}\NormalTok{])))}
 
 \NormalTok{## bray-curtis similarity}
-\NormalTok{scent_nmds.obj <-}\StringTok{ }\KeywordTok{metaMDS}\NormalTok{(}\DataTypeTok{comm =}\NormalTok{ scent, }\DataTypeTok{k =} \DecValTok{2}\NormalTok{, }\DataTypeTok{try =} \DecValTok{999}\NormalTok{, }
-                          \DataTypeTok{trymax =} \DecValTok{9999}\NormalTok{, }\DataTypeTok{distance =} \StringTok{"bray"}\NormalTok{) }
-\NormalTok{## MDS outcome evaluated with PCA for factor colony in metadata table for individuals}
-\NormalTok{scent_nmds <-}\StringTok{ }\KeywordTok{with}\NormalTok{(scent_factors, }\KeywordTok{MDSrotate}\NormalTok{(scent_nmds.obj, colony))}
+\NormalTok{scent_nmds.obj <-}\StringTok{ }\KeywordTok{metaMDS}\NormalTok{(}\DataTypeTok{comm =}\NormalTok{ scent, }\DataTypeTok{k =} \DecValTok{2}\NormalTok{, }
+    \DataTypeTok{try =} \DecValTok{999}\NormalTok{, }\DataTypeTok{trymax =} \DecValTok{9999}\NormalTok{, }\DataTypeTok{distance =} \StringTok{"bray"}\NormalTok{)}
+\NormalTok{## MDS outcome evaluated with PCA for}
+\NormalTok{## factor colony in metadata table for}
+\NormalTok{## individuals}
+\NormalTok{scent_nmds <-}\StringTok{ }\KeywordTok{with}\NormalTok{(scent_factors, }\KeywordTok{MDSrotate}\NormalTok{(scent_nmds.obj, }
+\NormalTok{    colony))}
 
 \NormalTok{## get x and y coordinates}
-\NormalTok{scent_nmds <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(scent_nmds[[}\StringTok{"points"}\NormalTok{]])  }
+\NormalTok{scent_nmds <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(scent_nmds[[}\StringTok{"points"}\NormalTok{]])}
 
-\NormalTok{## add the colony as a factor to each sample}
-\NormalTok{scent_nmds <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(scent_nmds,}
-                    \DataTypeTok{age =}\NormalTok{ scent_factors[[}\StringTok{"age"}\NormalTok{]],}
-                    \DataTypeTok{tissue_tag =}\NormalTok{ scent_factors[[}\StringTok{"tissue_tag"}\NormalTok{]],}
-                    \DataTypeTok{colony =}\NormalTok{ scent_factors[[}\StringTok{"colony"}\NormalTok{]],}
-                    \DataTypeTok{family =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"family"}\NormalTok{]]),}
-                    \DataTypeTok{clr =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"clr"}\NormalTok{]]),}
-                    \DataTypeTok{shp =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"shp"}\NormalTok{]]),}
-                    \DataTypeTok{gcms =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"gcms_run"}\NormalTok{]]),}
-                    \DataTypeTok{peak_res =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"peak_res"}\NormalTok{]]),}
-                    \DataTypeTok{sample_qlty =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"sample_qlty"}\NormalTok{]]),}
-                    \DataTypeTok{vialdate =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"gcms_vialdate"}\NormalTok{]]),}
-                    \DataTypeTok{captured =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"capture_date"}\NormalTok{]]),}
-                    \DataTypeTok{sex =}\NormalTok{ scent_factors[[}\StringTok{"sex"}\NormalTok{]],}
-                    \DataTypeTok{num_comp =}\NormalTok{ num_comp)}
-\CommentTok{# creates & adds new variable BeachAge }
-\NormalTok{scent_nmds <-}\StringTok{ }\NormalTok{scent_nmds }\OperatorTok{%>%}\StringTok{ }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{BeachAge =} \KeywordTok{str_c}\NormalTok{(colony, age, }\DataTypeTok{sep =} \StringTok{"_"}\NormalTok{)) }
+\NormalTok{## add the colony as a factor to each}
+\NormalTok{## sample}
+\NormalTok{scent_nmds <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(scent_nmds, }\DataTypeTok{age =}\NormalTok{ scent_factors[[}\StringTok{"age"}\NormalTok{]], }
+    \DataTypeTok{tissue_tag =}\NormalTok{ scent_factors[[}\StringTok{"tissue_tag"}\NormalTok{]], }
+    \DataTypeTok{colony =}\NormalTok{ scent_factors[[}\StringTok{"colony"}\NormalTok{]], }\DataTypeTok{family =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"family"}\NormalTok{]]), }
+    \DataTypeTok{clr =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"clr"}\NormalTok{]]), }
+    \DataTypeTok{shp =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"shp"}\NormalTok{]]), }
+    \DataTypeTok{gcms =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"gcms_run"}\NormalTok{]]), }
+    \DataTypeTok{peak_res =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"peak_res"}\NormalTok{]]), }
+    \DataTypeTok{sample_qlty =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"sample_qlty"}\NormalTok{]]), }
+    \DataTypeTok{vialdate =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"gcms_vialdate"}\NormalTok{]]), }
+    \DataTypeTok{captured =} \KeywordTok{as.factor}\NormalTok{(scent_factors[[}\StringTok{"capture_date"}\NormalTok{]]), }
+    \DataTypeTok{sex =}\NormalTok{ scent_factors[[}\StringTok{"sex"}\NormalTok{]], }\DataTypeTok{num_comp =}\NormalTok{ num_comp)}
+\CommentTok{# creates & adds new variable BeachAge}
+\NormalTok{scent_nmds <-}\StringTok{ }\NormalTok{scent_nmds }\OperatorTok{%>%}\StringTok{ }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{BeachAge =} \KeywordTok{str_c}\NormalTok{(colony, }
+\NormalTok{    age, }\DataTypeTok{sep =} \StringTok{"_"}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -800,22 +886,25 @@ PERMANOVA for colony membership in six pup colonies
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# set seed to reproduce the same outcome (can vary due to different permutations!)}
+\CommentTok{# set seed to reproduce the same outcome}
+\CommentTok{# (can vary due to different}
+\CommentTok{# permutations!)}
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
 
 \CommentTok{# set counter for while loop}
 \NormalTok{perm_count <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{99}\NormalTok{)}
 
-\CommentTok{# iterate different significance levels with a while-loop}
-\ControlFlowTok{while}\NormalTok{ (perm_count }\OperatorTok{<=}\StringTok{ }\DecValTok{99999}\NormalTok{) \{}\CommentTok{# end while-loop after the run for 99999 permutations}
-\NormalTok{  permanova_result_pupcols <-}\StringTok{ }\KeywordTok{adonis}\NormalTok{(scent }\OperatorTok{~}\StringTok{ }\NormalTok{age}\OperatorTok{+}\NormalTok{colony}\OperatorTok{+}\NormalTok{colony}\OperatorTok{:}\NormalTok{family, }
-         \DataTypeTok{data =}\NormalTok{ scent_factors,}
-         \DataTypeTok{method =} \StringTok{"bray"}\NormalTok{,}
-         \DataTypeTok{permutations =}\NormalTok{ perm_count)}
-  \KeywordTok{print}\NormalTok{(permanova_result_pupcols)}
-  
-\NormalTok{  perm_count <-}\StringTok{ }\NormalTok{(perm_count}\OperatorTok{*}\DecValTok{10}\NormalTok{)}\OperatorTok{+}\DecValTok{9} \CommentTok{# ends while-iteration after it increases to 999999}
-\NormalTok{\}}\CommentTok{#while }
+\CommentTok{# iterate different significance levels}
+\CommentTok{# with a while-loop end while-loop after}
+\CommentTok{# the run for 99999 permutations}
+\ControlFlowTok{while}\NormalTok{ (perm_count }\OperatorTok{<=}\StringTok{ }\DecValTok{99999}\NormalTok{) \{}
+\NormalTok{    permanova_result_pupcols <-}\StringTok{ }\KeywordTok{adonis}\NormalTok{(scent }\OperatorTok{~}\StringTok{ }
+\StringTok{        }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{colony }\OperatorTok{+}\StringTok{ }\NormalTok{colony}\OperatorTok{:}\NormalTok{family, }\DataTypeTok{data =}\NormalTok{ scent_factors, }
+        \DataTypeTok{method =} \StringTok{"bray"}\NormalTok{, }\DataTypeTok{permutations =}\NormalTok{ perm_count)}
+    \KeywordTok{print}\NormalTok{(permanova_result_pupcols)}
+    
+\NormalTok{    perm_count <-}\StringTok{ }\NormalTok{(perm_count }\OperatorTok{*}\StringTok{ }\DecValTok{10}\NormalTok{) }\OperatorTok{+}\StringTok{ }\DecValTok{9}  \CommentTok{# ends while-iteration after it increases to 999999}
+\NormalTok{\}  }\CommentTok{#while }
 \end{Highlighting}
 \end{Shaded}
 
@@ -891,7 +980,8 @@ Post-hoc tests for PERMANOVA results for six pup colonies
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# pairwise PERMANOVA}
-\NormalTok{pairwiseAdonis}\OperatorTok{::}\KeywordTok{pairwise.adonis}\NormalTok{(scent, scent_factors}\OperatorTok{$}\NormalTok{colony, }\DataTypeTok{perm =} \DecValTok{99999}\NormalTok{)}
+\NormalTok{pairwiseAdonis}\OperatorTok{::}\KeywordTok{pairwise.adonis}\NormalTok{(scent, scent_factors}\OperatorTok{$}\NormalTok{colony, }
+    \DataTypeTok{perm =} \DecValTok{99999}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -933,7 +1023,8 @@ Post-hoc tests for PERMANOVA results for six pup colonies
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# test for group dispersal}
-\NormalTok{mod2 <-}\StringTok{ }\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent), scent_factors}\OperatorTok{$}\NormalTok{colony, }\DataTypeTok{type =} \StringTok{"median"}\NormalTok{)}
+\NormalTok{mod2 <-}\StringTok{ }\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent), scent_factors}\OperatorTok{$}\NormalTok{colony, }
+    \DataTypeTok{type =} \StringTok{"median"}\NormalTok{)}
 \KeywordTok{anova}\NormalTok{(mod2)}
 \end{Highlighting}
 \end{Shaded}
@@ -958,9 +1049,8 @@ Re-evalution in PERMANOVA instead of ANOSIM
 \begin{Highlighting}[]
 \NormalTok{## PERMANOVA}
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
-\KeywordTok{adonis}\NormalTok{(scent }\OperatorTok{~}\StringTok{ }\NormalTok{age}\OperatorTok{+}\NormalTok{colony}\OperatorTok{+}\NormalTok{colony}\OperatorTok{:}\NormalTok{family, }
-       \DataTypeTok{data =}\NormalTok{ peak_factors, }
-       \DataTypeTok{permutations =} \DecValTok{99999}\NormalTok{)}
+\KeywordTok{adonis}\NormalTok{(scent }\OperatorTok{~}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{colony }\OperatorTok{+}\StringTok{ }\NormalTok{colony}\OperatorTok{:}\NormalTok{family, }
+    \DataTypeTok{data =}\NormalTok{ peak_factors, }\DataTypeTok{permutations =} \DecValTok{99999}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1005,7 +1095,8 @@ bootstrap}\label{effect-size-estimate-by-permanova-r-bootstrap}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## Load data and assign data to data.frames}
+\NormalTok{## Load data and assign data to}
+\NormalTok{## data.frames}
 \KeywordTok{load}\NormalTok{(}\StringTok{"RData/objects/R2_initial_season_btrap.RData"}\NormalTok{)}
 
 \NormalTok{old_season_colony <-}\StringTok{ }\NormalTok{paov_r2_results[[}\DecValTok{1}\NormalTok{]][[}\DecValTok{2}\NormalTok{]]}
@@ -1016,15 +1107,14 @@ bootstrap}\label{effect-size-estimate-by-permanova-r-bootstrap}
 \NormalTok{new_season_family <-}\StringTok{ }\NormalTok{paov_r2_results[[}\DecValTok{1}\NormalTok{]][[}\DecValTok{3}\NormalTok{]]}
 
 \NormalTok{MP_effectsize <-}\StringTok{ }\KeywordTok{c}\NormalTok{(old_season_colony, new_season_colony, }
-\NormalTok{                   old_season_family, new_season_family)}
+\NormalTok{    old_season_family, new_season_family)}
 
-\NormalTok{MP_effectsize.groups <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\StringTok{"Colony S1"}\NormalTok{, }\DecValTok{5000}\NormalTok{),}
-                          \KeywordTok{rep}\NormalTok{(}\StringTok{"Colony S2"}\NormalTok{, }\DecValTok{5000}\NormalTok{),}
-                          \KeywordTok{rep}\NormalTok{(}\StringTok{"Family S1"}\NormalTok{, }\DecValTok{5000}\NormalTok{), }
-                          \KeywordTok{rep}\NormalTok{(}\StringTok{"Family S2"}\NormalTok{, }\DecValTok{5000}\NormalTok{))}
+\NormalTok{MP_effectsize.groups <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\StringTok{"Colony S1"}\NormalTok{, }
+    \DecValTok{5000}\NormalTok{), }\KeywordTok{rep}\NormalTok{(}\StringTok{"Colony S2"}\NormalTok{, }\DecValTok{5000}\NormalTok{), }\KeywordTok{rep}\NormalTok{(}\StringTok{"Family S1"}\NormalTok{, }
+    \DecValTok{5000}\NormalTok{), }\KeywordTok{rep}\NormalTok{(}\StringTok{"Family S2"}\NormalTok{, }\DecValTok{5000}\NormalTok{))}
 
-\NormalTok{MP_effectsize.df <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{btrap_combined_results =}\NormalTok{ MP_effectsize,}
-                               \DataTypeTok{btrap_subset_groups =}\NormalTok{ MP_effectsize.groups)}
+\NormalTok{MP_effectsize.df <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{btrap_combined_results =}\NormalTok{ MP_effectsize, }
+    \DataTypeTok{btrap_subset_groups =}\NormalTok{ MP_effectsize.groups)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1033,52 +1123,53 @@ Effect size estimate plot
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{load}\NormalTok{(}\StringTok{"RData/objects/effect_size_df.RData"}\NormalTok{)}
-\CommentTok{# point estimates for PERMANOVA on non-bootstrapped (original) data}
-\NormalTok{point_estimate <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\FloatTok{0.1444734}\NormalTok{, }\FloatTok{0.09168289}\NormalTok{, }\FloatTok{0.08780086}\NormalTok{, }\FloatTok{0.1209394}\NormalTok{)}
-\CommentTok{# point estimate groups for reasons of comprehensibility}
-\NormalTok{point_estimate_groups <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Colony S1"}\NormalTok{, }\StringTok{"Colony S2"}\NormalTok{, }\StringTok{"Family S1"}\NormalTok{, }\StringTok{"Family S2"}\NormalTok{)}
+\CommentTok{# point estimates for PERMANOVA on}
+\CommentTok{# non-bootstrapped (original) data}
+\NormalTok{point_estimate <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\FloatTok{0.1444734}\NormalTok{, }\FloatTok{0.09168289}\NormalTok{, }
+    \FloatTok{0.08780086}\NormalTok{, }\FloatTok{0.1209394}\NormalTok{)}
+\CommentTok{# point estimate groups for reasons of}
+\CommentTok{# comprehensibility}
+\NormalTok{point_estimate_groups <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Colony S1"}\NormalTok{, }\StringTok{"Colony S2"}\NormalTok{, }
+    \StringTok{"Family S1"}\NormalTok{, }\StringTok{"Family S2"}\NormalTok{)}
 
 \CommentTok{# plot commands}
-\NormalTok{MP_effectsize_gg <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(MP_effectsize.df, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ btrap_combined_results, }
-                                                 \DataTypeTok{x =}\NormalTok{ btrap_subset_groups, }
-                                                 \DataTypeTok{color =}\NormalTok{ btrap_subset_groups)) }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\CommentTok{# this arranges the points according to their density}
-\StringTok{  }\KeywordTok{geom_quasirandom}\NormalTok{(}\DataTypeTok{alpha =} \FloatTok{0.06}\NormalTok{, }\DataTypeTok{size =} \DecValTok{3}\NormalTok{, }\DataTypeTok{width =} \FloatTok{0.3}\NormalTok{, }\DataTypeTok{bandwidth =} \DecValTok{1}\NormalTok{) }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\KeywordTok{scale_color_manual}\NormalTok{(}\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"#E69F00"}\NormalTok{ ,}\StringTok{"#E69F00"}\NormalTok{ ,}\StringTok{"#CC79A7"}\NormalTok{, }\StringTok{"#CC79A7"}\NormalTok{)) }\OperatorTok{+}
-\StringTok{  }\CommentTok{# makes the boxplots }
-\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{(}\DataTypeTok{width =} \FloatTok{0.35}\NormalTok{, }\DataTypeTok{outlier.shape =} \OtherTok{NA}\NormalTok{, }\DataTypeTok{color =} \StringTok{"white"}\NormalTok{, }\DataTypeTok{alpha =} \FloatTok{0.1}\NormalTok{, }\DataTypeTok{lwd=}\FloatTok{0.8}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{annotate}\NormalTok{(}\StringTok{"point"}\NormalTok{, }\DataTypeTok{x =} \DecValTok{1}\NormalTok{, }\DataTypeTok{y =}\NormalTok{ point_estimate[}\DecValTok{4}\NormalTok{], }\DataTypeTok{colour =} \StringTok{"#000000"}\NormalTok{, }
-           \DataTypeTok{fill =} \StringTok{"#CCCCCC"}\NormalTok{, }\DataTypeTok{size =} \DecValTok{2}\NormalTok{, }\DataTypeTok{shape =} \DecValTok{21}\NormalTok{) }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\KeywordTok{annotate}\NormalTok{(}\StringTok{"point"}\NormalTok{, }\DataTypeTok{x =} \DecValTok{2}\NormalTok{, }\DataTypeTok{y =}\NormalTok{ point_estimate[}\DecValTok{3}\NormalTok{], }\DataTypeTok{colour =} \StringTok{"#000000"}\NormalTok{, }
-           \DataTypeTok{fill =} \StringTok{"#CCCCCC"}\NormalTok{, }\DataTypeTok{size =} \DecValTok{2}\NormalTok{, }\DataTypeTok{shape =} \DecValTok{21}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{annotate}\NormalTok{(}\StringTok{"point"}\NormalTok{, }\DataTypeTok{x =} \DecValTok{3}\NormalTok{, }\DataTypeTok{y =}\NormalTok{ point_estimate[}\DecValTok{2}\NormalTok{], }\DataTypeTok{colour =} \StringTok{"#000000"}\NormalTok{, }
-           \DataTypeTok{fill =} \StringTok{"#CCCCCC"}\NormalTok{, }\DataTypeTok{size =} \DecValTok{2}\NormalTok{, }\DataTypeTok{shape =} \DecValTok{21}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{annotate}\NormalTok{(}\StringTok{"point"}\NormalTok{, }\DataTypeTok{x =} \DecValTok{4}\NormalTok{, }\DataTypeTok{y =}\NormalTok{ point_estimate[}\DecValTok{1}\NormalTok{], }\DataTypeTok{colour =} \StringTok{"#000000"}\NormalTok{, }
-           \DataTypeTok{fill =} \StringTok{"#CCCCCC"}\NormalTok{, }\DataTypeTok{size =} \DecValTok{2}\NormalTok{, }\DataTypeTok{shape =} \DecValTok{21}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\CommentTok{# this is a possible theme of the plot, there are many others}
-\StringTok{  }\KeywordTok{theme_classic}\NormalTok{() }\OperatorTok{+}
-\StringTok{  }\CommentTok{# changes the labels on the x axis}
-\StringTok{  }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{limits =} \KeywordTok{c}\NormalTok{(}\OperatorTok{-}\FloatTok{0.01}\NormalTok{ ,}\FloatTok{0.25}\NormalTok{),}
-                     \DataTypeTok{breaks =} \KeywordTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.25}\NormalTok{, }\FloatTok{0.05}\NormalTok{)) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{scale_x_discrete}\NormalTok{(}\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"Family S2"}\NormalTok{ =}\StringTok{ "Mother-offspring similarity}\CharTok{\textbackslash{}n}\StringTok{replication study"}\NormalTok{,}
-                              \StringTok{"Family S1"}\NormalTok{ =}\StringTok{ "Mother-offspring similarity}\CharTok{\textbackslash{}n}\StringTok{original study"}\NormalTok{,}
-                              \StringTok{"Colony S2"}\NormalTok{ =}\StringTok{ "Colony membership}\CharTok{\textbackslash{}n}\StringTok{replication study"}\NormalTok{,}
-                              \StringTok{"Colony S1"}\NormalTok{ =}\StringTok{ "Colony membership}\CharTok{\textbackslash{}n}\StringTok{original study"}\NormalTok{),}
-                   \DataTypeTok{limits =} \KeywordTok{c}\NormalTok{(}\StringTok{"Family S2"}\NormalTok{,}
-                              \StringTok{"Family S1"}\NormalTok{,}
-                              \StringTok{"Colony S2"}\NormalTok{, }
-                              \StringTok{"Colony S1"}\NormalTok{)) }\OperatorTok{+}
-\StringTok{  }\CommentTok{# geom_hline(yintercept = 0, linetype = "dashed") +}
-\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{""}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\CommentTok{# label for y axis}
-\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Explained variation [R²]"}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\CommentTok{# flips plot so everything is horizontal}
-\StringTok{  }\KeywordTok{coord_flip}\NormalTok{() }\OperatorTok{+}
-\StringTok{  }\CommentTok{# adjust theme specifics}
-\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{panel.background =} \KeywordTok{element_rect}\NormalTok{(}\DataTypeTok{colour =} \StringTok{"black"}\NormalTok{, }\DataTypeTok{size =} \FloatTok{1.25}\NormalTok{, }\DataTypeTok{fill =} \OtherTok{NA}\NormalTok{),}
-        \DataTypeTok{text =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{size =} \DecValTok{15}\NormalTok{),}
-        \DataTypeTok{axis.text =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{colour =} \StringTok{"black"}\NormalTok{),}
-        \DataTypeTok{legend.position =} \StringTok{"none"}\NormalTok{)}
+\NormalTok{MP_effectsize_gg <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(MP_effectsize.df, }
+    \KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ btrap_combined_results, }\DataTypeTok{x =}\NormalTok{ btrap_subset_groups, }
+        \DataTypeTok{color =}\NormalTok{ btrap_subset_groups)) }\OperatorTok{+}\StringTok{ }\CommentTok{# this arranges the points according to}
+\CommentTok{# their density}
+\KeywordTok{geom_quasirandom}\NormalTok{(}\DataTypeTok{alpha =} \FloatTok{0.06}\NormalTok{, }\DataTypeTok{size =} \DecValTok{3}\NormalTok{, }
+    \DataTypeTok{width =} \FloatTok{0.3}\NormalTok{, }\DataTypeTok{bandwidth =} \DecValTok{1}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_color_manual}\NormalTok{(}\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"#E69F00"}\NormalTok{, }
+    \StringTok{"#E69F00"}\NormalTok{, }\StringTok{"#CC79A7"}\NormalTok{, }\StringTok{"#CC79A7"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }\CommentTok{# makes the boxplots}
+\KeywordTok{geom_boxplot}\NormalTok{(}\DataTypeTok{width =} \FloatTok{0.35}\NormalTok{, }\DataTypeTok{outlier.shape =} \OtherTok{NA}\NormalTok{, }
+    \DataTypeTok{color =} \StringTok{"white"}\NormalTok{, }\DataTypeTok{alpha =} \FloatTok{0.1}\NormalTok{, }\DataTypeTok{lwd =} \FloatTok{0.8}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{annotate}\NormalTok{(}\StringTok{"point"}\NormalTok{, }\DataTypeTok{x =} \DecValTok{1}\NormalTok{, }\DataTypeTok{y =}\NormalTok{ point_estimate[}\DecValTok{4}\NormalTok{], }
+        \DataTypeTok{colour =} \StringTok{"#000000"}\NormalTok{, }\DataTypeTok{fill =} \StringTok{"#CCCCCC"}\NormalTok{, }
+        \DataTypeTok{size =} \DecValTok{2}\NormalTok{, }\DataTypeTok{shape =} \DecValTok{21}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{annotate}\NormalTok{(}\StringTok{"point"}\NormalTok{, }
+    \DataTypeTok{x =} \DecValTok{2}\NormalTok{, }\DataTypeTok{y =}\NormalTok{ point_estimate[}\DecValTok{3}\NormalTok{], }\DataTypeTok{colour =} \StringTok{"#000000"}\NormalTok{, }
+    \DataTypeTok{fill =} \StringTok{"#CCCCCC"}\NormalTok{, }\DataTypeTok{size =} \DecValTok{2}\NormalTok{, }\DataTypeTok{shape =} \DecValTok{21}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{annotate}\NormalTok{(}\StringTok{"point"}\NormalTok{, }\DataTypeTok{x =} \DecValTok{3}\NormalTok{, }\DataTypeTok{y =}\NormalTok{ point_estimate[}\DecValTok{2}\NormalTok{], }
+        \DataTypeTok{colour =} \StringTok{"#000000"}\NormalTok{, }\DataTypeTok{fill =} \StringTok{"#CCCCCC"}\NormalTok{, }
+        \DataTypeTok{size =} \DecValTok{2}\NormalTok{, }\DataTypeTok{shape =} \DecValTok{21}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{annotate}\NormalTok{(}\StringTok{"point"}\NormalTok{, }
+    \DataTypeTok{x =} \DecValTok{4}\NormalTok{, }\DataTypeTok{y =}\NormalTok{ point_estimate[}\DecValTok{1}\NormalTok{], }\DataTypeTok{colour =} \StringTok{"#000000"}\NormalTok{, }
+    \DataTypeTok{fill =} \StringTok{"#CCCCCC"}\NormalTok{, }\DataTypeTok{size =} \DecValTok{2}\NormalTok{, }\DataTypeTok{shape =} \DecValTok{21}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\CommentTok{# this is a possible theme of the plot,}
+\CommentTok{# there are many others}
+\KeywordTok{theme_classic}\NormalTok{() }\OperatorTok{+}\StringTok{ }\CommentTok{# changes the labels on the x axis}
+\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{limits =} \KeywordTok{c}\NormalTok{(}\OperatorTok{-}\FloatTok{0.01}\NormalTok{, }\FloatTok{0.25}\NormalTok{), }
+    \DataTypeTok{breaks =} \KeywordTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.25}\NormalTok{, }\FloatTok{0.05}\NormalTok{)) }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_x_discrete}\NormalTok{(}\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{`}\DataTypeTok{Family S2}\StringTok{`}\NormalTok{ =}\StringTok{ "Mother-offspring similarity}\CharTok{\textbackslash{}n}\StringTok{replication study"}\NormalTok{, }
+    \StringTok{`}\DataTypeTok{Family S1}\StringTok{`}\NormalTok{ =}\StringTok{ "Mother-offspring similarity}\CharTok{\textbackslash{}n}\StringTok{original study"}\NormalTok{, }
+    \StringTok{`}\DataTypeTok{Colony S2}\StringTok{`}\NormalTok{ =}\StringTok{ "Colony membership}\CharTok{\textbackslash{}n}\StringTok{replication study"}\NormalTok{, }
+    \StringTok{`}\DataTypeTok{Colony S1}\StringTok{`}\NormalTok{ =}\StringTok{ "Colony membership}\CharTok{\textbackslash{}n}\StringTok{original study"}\NormalTok{), }
+    \DataTypeTok{limits =} \KeywordTok{c}\NormalTok{(}\StringTok{"Family S2"}\NormalTok{, }\StringTok{"Family S1"}\NormalTok{, }
+        \StringTok{"Colony S2"}\NormalTok{, }\StringTok{"Colony S1"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }\CommentTok{# geom_hline(yintercept = 0, linetype =}
+\CommentTok{# 'dashed') +}
+\KeywordTok{xlab}\NormalTok{(}\StringTok{""}\NormalTok{) }\OperatorTok{+}\StringTok{ }\CommentTok{# label for y axis}
+\KeywordTok{ylab}\NormalTok{(}\StringTok{"Explained variation [R²]"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\CommentTok{# flips plot so everything is horizontal}
+\KeywordTok{coord_flip}\NormalTok{() }\OperatorTok{+}\StringTok{ }\CommentTok{# adjust theme specifics}
+\KeywordTok{theme}\NormalTok{(}\DataTypeTok{panel.background =} \KeywordTok{element_rect}\NormalTok{(}\DataTypeTok{colour =} \StringTok{"black"}\NormalTok{, }
+    \DataTypeTok{size =} \FloatTok{1.25}\NormalTok{, }\DataTypeTok{fill =} \OtherTok{NA}\NormalTok{), }\DataTypeTok{text =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{size =} \DecValTok{15}\NormalTok{), }
+    \DataTypeTok{axis.text =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{colour =} \StringTok{"black"}\NormalTok{), }
+    \DataTypeTok{legend.position =} \StringTok{"none"}\NormalTok{)}
 
 
 \NormalTok{MP_effectsize_gg}
@@ -1091,283 +1182,350 @@ Effect size estimate plot
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## creates function 'scent_btrap_r2_swarm_data' that performs bootstrap}
+\NormalTok{## creates function}
+\NormalTok{## 'scent_btrap_r2_swarm_data' that}
+\NormalTok{## performs bootstrap}
 
-\CommentTok{# Bootstrap to track R2 values for randomized subsets. In addition,}
-\CommentTok{# bootstrap cannot only be used to randomize the chemical data frame}
-\CommentTok{# to evaluate R2 distribution as effect size estimates, }
-\CommentTok{# but also to evaluate R2 change for different subsets based on different}
-\CommentTok{# premises. 1) Frequent peaks 2) Strong concentrations 3) Peaks identified by SIMPER}
+\CommentTok{# Bootstrap to track R2 values for}
+\CommentTok{# randomized subsets. In addition,}
+\CommentTok{# bootstrap cannot only be used to}
+\CommentTok{# randomize the chemical data frame to}
+\CommentTok{# evaluate R2 distribution as effect size}
+\CommentTok{# estimates, but also to evaluate R2}
+\CommentTok{# change for different subsets based on}
+\CommentTok{# different premises. 1) Frequent peaks}
+\CommentTok{# 2) Strong concentrations 3) Peaks}
+\CommentTok{# identified by SIMPER}
 
 \KeywordTok{require}\NormalTok{(vegan)}
 
-\CommentTok{# path: file path to scent_nmds-mompup2017_ssbfwb.RData", }
-\CommentTok{#objects: scent_nmds, scent_nmds.obj, scent_factors, scent}
-\CommentTok{# df.permutations: number of times the scent.df from loaded data will be permuted}
-\CommentTok{# nmds.permutations: number of permutation in nMDS using Bray-Curtis}
-\CommentTok{# btrap.iterations: number of procedure repeats}
+\CommentTok{# path: file path to}
+\CommentTok{# scent_nmds-mompup2017_ssbfwb.RData',}
+\CommentTok{# objects: scent_nmds, scent_nmds.obj,}
+\CommentTok{# scent_factors, scent df.permutations:}
+\CommentTok{# number of times the scent.df from}
+\CommentTok{# loaded data will be permuted}
+\CommentTok{# nmds.permutations: number of}
+\CommentTok{# permutation in nMDS using Bray-Curtis}
+\CommentTok{# btrap.iterations: number of procedure}
+\CommentTok{# repeats}
 
-\NormalTok{scent_btrap_r2_swarm_data <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(path, }\DataTypeTok{df.permutations =} \DecValTok{15}\NormalTok{, }
-                                      \DataTypeTok{nmds.permutations =} \DecValTok{999}\NormalTok{, }
-                                      \DataTypeTok{btrap.iterations =} \DecValTok{5000}\NormalTok{)\{}
-  \CommentTok{# Create a data frame by permuting the data for scent}
-  \CommentTok{# compounds data and also ensure that each population*age occur}
-  \CommentTok{# same amounts of time in the permutation data frame. }
-  \CommentTok{#---------------------------------------}
-  
-  \CommentTok{# load data frame with data of aligned fur seal chromatograms}
-  \KeywordTok{load}\NormalTok{(path)}
-\NormalTok{  scent_factors <-}\StringTok{ }\NormalTok{peak_factors}
-  \CommentTok{# transfer BeachAge Column from scent_nmds to meta data.frame scent_factors}
-\NormalTok{  scent_factors <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(scent_factors, }
-                         \DataTypeTok{BeachAge =}\NormalTok{ scent_nmds}\OperatorTok{$}\NormalTok{BeachAge)}
-  
-  \CommentTok{# create index column for meta data frame}
-\NormalTok{  scent_factors <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(scent_factors,}
-                         \DataTypeTok{SampleIndex =} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(}\KeywordTok{rownames}\NormalTok{(scent_factors)))}
-  
-  
-  \CommentTok{# create data.frame to track PERMANOVA results over repeated tests}
-\NormalTok{  nonsubset_results_paov <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{R2_age =} \KeywordTok{double}\NormalTok{(), }\DataTypeTok{p_colfam =} \KeywordTok{double}\NormalTok{(),}
-                                       \DataTypeTok{R2_residual =} \KeywordTok{double}\NormalTok{(), }
-                                       \DataTypeTok{F_Het =} \KeywordTok{double}\NormalTok{(), }\DataTypeTok{p_Het =} \KeywordTok{double}\NormalTok{())}
-\NormalTok{  promcomp_results_paov <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{R2_age =} \KeywordTok{double}\NormalTok{(), }\DataTypeTok{p_colfam =} \KeywordTok{double}\NormalTok{(),}
-                                      \DataTypeTok{R2_residual =} \KeywordTok{double}\NormalTok{(), }
-                                      \DataTypeTok{F_Het =} \KeywordTok{double}\NormalTok{(), }\DataTypeTok{p_Het =} \KeywordTok{double}\NormalTok{())}
-\NormalTok{  highcomp_results_paov <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{R2_age =} \KeywordTok{double}\NormalTok{(), }\DataTypeTok{p_colfam =} \KeywordTok{double}\NormalTok{(),}
-                                      \DataTypeTok{R2_residual =} \KeywordTok{double}\NormalTok{(), }
-                                      \DataTypeTok{F_Het =} \KeywordTok{double}\NormalTok{(), }\DataTypeTok{p_Het =} \KeywordTok{double}\NormalTok{())}
-\NormalTok{  simper_results_paov <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{R2_age =} \KeywordTok{double}\NormalTok{(), }\DataTypeTok{p_colfam =} \KeywordTok{double}\NormalTok{(),}
-                                    \DataTypeTok{R2_residual =} \KeywordTok{double}\NormalTok{(), }
-                                    \DataTypeTok{F_Het =} \KeywordTok{double}\NormalTok{(), }\DataTypeTok{p_Het =} \KeywordTok{double}\NormalTok{())}
-  
-  \CommentTok{# create list to store created objects in an iteration}
-\NormalTok{  iter_object_container <-}\StringTok{ }\KeywordTok{list}\NormalTok{()}
-  
-  \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{btrap.iterations) \{}
-    
-    
-    \CommentTok{# create data.frame subsets (colony subset) by indexing the meta data.frame }
-\NormalTok{    scent.f.ssb.m <-}\StringTok{ }\NormalTok{scent_factors[scent_factors}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "SSB_1"}\NormalTok{,]}
-\NormalTok{    scent.f.fwb.m <-}\StringTok{ }\NormalTok{scent_factors[scent_factors}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_1"}\NormalTok{,]}
-\NormalTok{    scent.f.ssb.p <-}\StringTok{ }\NormalTok{scent_factors[scent_factors}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "SSB_2"}\NormalTok{,]}
-\NormalTok{    scent.f.fwb.p <-}\StringTok{ }\NormalTok{scent_factors[scent_factors}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ "FWB_2"}\NormalTok{,]}
-    
-    \CommentTok{# int vector of row index number of permuted scent.ssb data.frame}
-    \CommentTok{# row numbers will be used to create a permuted data.frame of }
-    \CommentTok{# evenly distributed draws of individuals}
-\NormalTok{    permute_rows_ssb_m <-}\StringTok{ }\KeywordTok{sample}\NormalTok{(scent.f.ssb.m}\OperatorTok{$}\NormalTok{SampleIndex, df.permutations, }\DataTypeTok{replace =}\NormalTok{ T)}
-\NormalTok{    permute_rows_fwb_m <-}\StringTok{ }\KeywordTok{sample}\NormalTok{(scent.f.fwb.m}\OperatorTok{$}\NormalTok{SampleIndex, df.permutations, }\DataTypeTok{replace =}\NormalTok{ T)}
-\NormalTok{    permute_rows_ssb_p <-}\StringTok{ }\KeywordTok{sample}\NormalTok{(scent.f.ssb.p}\OperatorTok{$}\NormalTok{SampleIndex, df.permutations, }\DataTypeTok{replace =}\NormalTok{ T)}
-\NormalTok{    permute_rows_fwb_p <-}\StringTok{ }\KeywordTok{sample}\NormalTok{(scent.f.fwb.p}\OperatorTok{$}\NormalTok{SampleIndex, df.permutations, }\DataTypeTok{replace =}\NormalTok{ T)}
-    
-    \CommentTok{# create overall index number that can be used to }
-    \CommentTok{#index data.frame(scent): index corresponds to correct individual }
-\NormalTok{    perm_index_all <-}\StringTok{ }\KeywordTok{c}\NormalTok{(permute_rows_ssb_m, }
-\NormalTok{                        permute_rows_fwb_m,}
-\NormalTok{                        permute_rows_ssb_p,}
-\NormalTok{                        permute_rows_fwb_p)}
-    
-    \CommentTok{# create new data.frame with indeces found in permutation }
-    \CommentTok{# results vector perm_index_all}
-\NormalTok{    scent.permute <-}\StringTok{ }\NormalTok{scent[perm_index_all,]}
-\NormalTok{    scent_factors.permute <-}\StringTok{ }\NormalTok{scent_factors[perm_index_all,]}
-    \CommentTok{# rownames(scent.permute) == rownames(scent_factors.permute) # TRUE}
+\NormalTok{scent_btrap_r2_swarm_data <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(path, }
+    \DataTypeTok{df.permutations =} \DecValTok{15}\NormalTok{, }\DataTypeTok{nmds.permutations =} \DecValTok{999}\NormalTok{, }
+    \DataTypeTok{btrap.iterations =} \DecValTok{5000}\NormalTok{) \{}
+    \CommentTok{# Create a data frame by permuting the}
+    \CommentTok{# data for scent compounds data and also}
+    \CommentTok{# ensure that each population*age occur}
+    \CommentTok{# same amounts of time in the permutation}
+    \CommentTok{# data frame.}
     \CommentTok{#---------------------------------------}
     
-    \CommentTok{# Perform analysis to find 3 subsets based on different premises }
-    \CommentTok{# with the permuted data frame. }
-    \CommentTok{# Track 15 best performing compounds of an analysis}
-    \CommentTok{#---------------------------------------}
+    \CommentTok{# load data frame with data of aligned}
+    \CommentTok{# fur seal chromatograms}
+    \KeywordTok{load}\NormalTok{(path)}
+\NormalTok{    scent_factors <-}\StringTok{ }\NormalTok{peak_factors}
+    \CommentTok{# transfer BeachAge Column from}
+    \CommentTok{# scent_nmds to meta data.frame}
+    \CommentTok{# scent_factors}
+\NormalTok{    scent_factors <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(scent_factors, }
+        \DataTypeTok{BeachAge =}\NormalTok{ scent_nmds}\OperatorTok{$}\NormalTok{BeachAge)}
     
-\NormalTok{    ## NDMS scale results}
-\NormalTok{    ## count number of peaks that are not 0 per column}
-\NormalTok{    peak_count <-}\StringTok{ }\KeywordTok{as.vector}\NormalTok{(}\KeywordTok{apply}\NormalTok{(scent.permute, }\DecValTok{2}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\KeywordTok{length}\NormalTok{(x[x}\OperatorTok{>}\DecValTok{0}\NormalTok{]))) }
-    
-\NormalTok{    ## add peaks in a column that are not 0 to estimate highest }
-    \CommentTok{# concentration peak sum}
-\NormalTok{    peak_add <-}\StringTok{ }\KeywordTok{as.vector}\NormalTok{(}\KeywordTok{apply}\NormalTok{(scent.permute, }\DecValTok{2}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\KeywordTok{sum}\NormalTok{(x))) }
-    
-\NormalTok{    ## create dataframe with same name properties as scent.RData}
-\NormalTok{    compound_subset <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{name =} \KeywordTok{colnames}\NormalTok{(scent.permute), }
-\NormalTok{                                  peak_count, peak_add)}
-    
-\NormalTok{    ## sort data frame for most prominent compounds over all samples}
-\NormalTok{    most_abundant <-}\StringTok{ }\NormalTok{compound_subset }\OperatorTok{%>%}\StringTok{ }\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(peak_count))}
-    
-\NormalTok{    ## shorten scent matrix to only the 15 most abundant compounds}
-\NormalTok{    scent.promcomp <-}\StringTok{ }\NormalTok{scent.permute[}\KeywordTok{colnames}\NormalTok{(scent.permute) }\OperatorTok{%in%}\StringTok{ }
-\StringTok{                                      }\NormalTok{most_abundant}\OperatorTok{$}\NormalTok{name[}\DecValTok{1}\OperatorTok{:}\DecValTok{15}\NormalTok{]]}
-    
-\NormalTok{    ## sort data frame for most highly concentrated compounds over all samples}
-\NormalTok{    most_concentration <-}\StringTok{ }\NormalTok{compound_subset }\OperatorTok{%>%}\StringTok{ }\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(peak_add))}
-    
-\NormalTok{    ## shorten scent matrix to only the 15 most abundant compounds}
-\NormalTok{    scent.highcomp <-}\StringTok{ }\NormalTok{scent.permute[}\KeywordTok{colnames}\NormalTok{(scent.permute) }\OperatorTok{%in%}\StringTok{ }
-\StringTok{                                      }\NormalTok{most_concentration}\OperatorTok{$}\NormalTok{name[}\DecValTok{1}\OperatorTok{:}\DecValTok{15}\NormalTok{]]}
-    
-\NormalTok{    ## simper}
-    \CommentTok{# simper analysis and results array}
-\NormalTok{    sim <-}\StringTok{ }\KeywordTok{with}\NormalTok{(scent_factors.permute, }
-                \KeywordTok{simper}\NormalTok{(scent.permute, colony))}
-\NormalTok{    best.compounds.simper.btrap <-}\StringTok{ }\KeywordTok{summary}\NormalTok{(sim)[[}\DecValTok{1}\NormalTok{]]}
-    \CommentTok{#filter 15 compounds that contribute most towards dissimilarity of individuals}
-\NormalTok{    simper_comps <-}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{rownames}\NormalTok{(best.compounds.simper.btrap))}
-\NormalTok{    best_comps <-}\StringTok{ }\NormalTok{simper_comps[}\DecValTok{1}\OperatorTok{:}\DecValTok{15}\NormalTok{] }
-    \CommentTok{# subset peak data matrix \{scent\}}
-\NormalTok{    scent.simper.btrap <-}\StringTok{ }\NormalTok{scent.permute[,}\KeywordTok{which}\NormalTok{(}\KeywordTok{colnames}\NormalTok{(scent.permute) }\OperatorTok{%in%}\StringTok{ }
-\StringTok{                                                 }\KeywordTok{as.character}\NormalTok{(best_comps))]}
-    \CommentTok{#---------------------------------------}
-    
-    \CommentTok{# Take 15 identified compounds and limit nMDS of the permuted }
-    \CommentTok{# data frame (scent.permute) to only those compounds}
-    
-    \CommentTok{#---------------------------------------}
-    
-    \CommentTok{# bray-curtis similarity}
-\NormalTok{    scent_nmds_regular.obj <-}\StringTok{ }\NormalTok{vegan}\OperatorTok{::}\KeywordTok{metaMDS}\NormalTok{(}\DataTypeTok{comm =}\NormalTok{ scent.permute, }\DataTypeTok{k =} \DecValTok{2}\NormalTok{, }
-                                             \DataTypeTok{try =}\NormalTok{ df.permutations, }\DataTypeTok{distance =} \StringTok{"bray"}\NormalTok{)}
-\NormalTok{    scent_nmds_count.obj <-}\StringTok{ }\NormalTok{vegan}\OperatorTok{::}\KeywordTok{metaMDS}\NormalTok{(}\DataTypeTok{comm =}\NormalTok{ scent.promcomp, }\DataTypeTok{k =} \DecValTok{2}\NormalTok{, }
-                                           \DataTypeTok{try =}\NormalTok{ df.permutations, }\DataTypeTok{distance =} \StringTok{"bray"}\NormalTok{) }
-\NormalTok{    scent_nmds_add.obj <-}\StringTok{ }\NormalTok{vegan}\OperatorTok{::}\KeywordTok{metaMDS}\NormalTok{(}\DataTypeTok{comm =}\NormalTok{ scent.highcomp, }\DataTypeTok{k =} \DecValTok{2}\NormalTok{, }
-                                         \DataTypeTok{try =}\NormalTok{ df.permutations, }\DataTypeTok{distance =} \StringTok{"bray"}\NormalTok{) }
-\NormalTok{    scent_nmds_simper.obj <-}\StringTok{ }\NormalTok{vegan}\OperatorTok{::}\KeywordTok{metaMDS}\NormalTok{(}\DataTypeTok{comm =}\NormalTok{ scent.simper.btrap, }\DataTypeTok{k =} \DecValTok{2}\NormalTok{, }
-                                            \DataTypeTok{try =}\NormalTok{ df.permutations, }\DataTypeTok{distance =} \StringTok{"bray"}\NormalTok{)}
-    
-\NormalTok{    ## get x and y coordinates}
-\NormalTok{    scent_nmds_regular <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(scent_nmds_regular.obj[[}\StringTok{"points"}\NormalTok{]])}
-\NormalTok{    scent_nmds_count <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(scent_nmds_count.obj[[}\StringTok{"points"}\NormalTok{]]) }
-\NormalTok{    scent_nmds_add <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(scent_nmds_add.obj[[}\StringTok{"points"}\NormalTok{]])}
-\NormalTok{    scent_nmds_simper <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(scent_nmds_simper.obj[[}\StringTok{"points"}\NormalTok{]])}
-    
-\NormalTok{    ## add the colony as a factor to each sample}
-\NormalTok{    scent_nmds <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{MDS1r =}\NormalTok{ scent_nmds_regular[[}\StringTok{"MDS1"}\NormalTok{]],}
-                             \DataTypeTok{MDS2r =}\NormalTok{ scent_nmds_regular[[}\StringTok{"MDS2"}\NormalTok{]],}
-                             \DataTypeTok{MDS1c =}\NormalTok{ scent_nmds_count[[}\StringTok{"MDS1"}\NormalTok{]],}
-                             \DataTypeTok{MDS2c =}\NormalTok{ scent_nmds_count[[}\StringTok{"MDS2"}\NormalTok{]],}
-                             \DataTypeTok{MDS1a =}\NormalTok{ scent_nmds_add[[}\StringTok{"MDS1"}\NormalTok{]],}
-                             \DataTypeTok{MDS2a =}\NormalTok{ scent_nmds_add[[}\StringTok{"MDS2"}\NormalTok{]],}
-                             \DataTypeTok{MDS1s =}\NormalTok{ scent_nmds_simper[[}\StringTok{"MDS1"}\NormalTok{]],}
-                             \DataTypeTok{MDS2s =}\NormalTok{ scent_nmds_simper[[}\StringTok{"MDS2"}\NormalTok{]], }
-                             \DataTypeTok{age =}\NormalTok{ scent_factors.permute[[}\StringTok{"age"}\NormalTok{]],}
-                             \DataTypeTok{colony =}\NormalTok{ scent_factors.permute[[}\StringTok{"colony"}\NormalTok{]],}
-                             \DataTypeTok{family =}\NormalTok{ scent_factors.permute[[}\StringTok{"family"}\NormalTok{]],}
-                             \DataTypeTok{BeachAge =}\NormalTok{ scent_factors.permute[[}\StringTok{"BeachAge"}\NormalTok{]]}
-\NormalTok{    )}
-    \CommentTok{#---------------------------------------}
-    
-    \CommentTok{# Perform PERMANOVA on distance matrix based limited scent compounds data}
-    \CommentTok{#---------------------------------------}
-    
-    \CommentTok{# not subsetted}
-\NormalTok{    nonsubset.df_permanova <-}\StringTok{ }\KeywordTok{adonis}\NormalTok{(scent.permute }\OperatorTok{~}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{colony }\OperatorTok{+}\StringTok{ }\NormalTok{colony}\OperatorTok{:}\NormalTok{family,}
-                                     \DataTypeTok{data =}\NormalTok{ scent_factors.permute,}
-                                     \DataTypeTok{permutations =} \DecValTok{9999}\NormalTok{)}
-\NormalTok{    nonsubset.df_hetgeneity <-}\StringTok{ }\KeywordTok{anova}\NormalTok{(}\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent.permute), }
-\NormalTok{                                                scent_factors.permute}\OperatorTok{$}\NormalTok{colony))}
-    
-    \CommentTok{# track important values of statistical analysis in this run}
-\NormalTok{    nonsubset_iter_res_paov <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(}\DataTypeTok{R2_age =}\NormalTok{ nonsubset.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{1}\NormalTok{],}
-                                     \DataTypeTok{R2_colony =}\NormalTok{ nonsubset.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{2}\NormalTok{],}
-                                     \DataTypeTok{R2_famcol =}\NormalTok{ nonsubset.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{3}\NormalTok{],}
-                                     \DataTypeTok{R2_residual =}\NormalTok{ nonsubset.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{4}\NormalTok{],}
-                                     \DataTypeTok{F_Het =}\NormalTok{ nonsubset.df_hetgeneity}\OperatorTok{$}\StringTok{`}\DataTypeTok{F value}\StringTok{`}\NormalTok{[}\DecValTok{1}\NormalTok{],}
-                                     \DataTypeTok{p_Het =}\NormalTok{ nonsubset.df_hetgeneity}\OperatorTok{$}\StringTok{`}\DataTypeTok{Pr(>F)}\StringTok{`}\NormalTok{[}\DecValTok{1}\NormalTok{])}
-    
-    \CommentTok{# bind run values to track changes over iterations in the for-loop}
-\NormalTok{    nonsubset_results_paov <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(nonsubset_results_paov,}
-\NormalTok{                                    nonsubset_iter_res_paov)}
-  
-    \CommentTok{#prom comps}
-\NormalTok{    promcomp.df_permanova <-}\StringTok{ }\KeywordTok{adonis}\NormalTok{(scent.promcomp }\OperatorTok{~}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{colony }\OperatorTok{+}\StringTok{ }\NormalTok{colony}\OperatorTok{:}\NormalTok{family, }
-                                    \DataTypeTok{data =}\NormalTok{ scent_factors.permute, }
-                                    \DataTypeTok{permutations =} \DecValTok{9999}\NormalTok{) }
-\NormalTok{    promcomp.df_hetgeneity <-}\StringTok{ }\KeywordTok{anova}\NormalTok{(}\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent.promcomp), }
-\NormalTok{                                               scent_factors.permute}\OperatorTok{$}\NormalTok{colony)) }
-    
-\NormalTok{    promcomp_iter_res_paov <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(}\DataTypeTok{R2_age =}\NormalTok{ promcomp.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{1}\NormalTok{],}
-                                    \DataTypeTok{R2_colony =}\NormalTok{ promcomp.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{2}\NormalTok{],}
-                                    \DataTypeTok{R2_famcol =}\NormalTok{ promcomp.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{3}\NormalTok{],}
-                                    \DataTypeTok{R2_residual =}\NormalTok{ promcomp.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{4}\NormalTok{],}
-                                    \DataTypeTok{F_Het =}\NormalTok{ promcomp.df_hetgeneity}\OperatorTok{$}\StringTok{`}\DataTypeTok{F value}\StringTok{`}\NormalTok{[}\DecValTok{1}\NormalTok{],}
-                                    \DataTypeTok{p_Het =}\NormalTok{ promcomp.df_hetgeneity}\OperatorTok{$}\StringTok{`}\DataTypeTok{Pr(>F)}\StringTok{`}\NormalTok{[}\DecValTok{1}\NormalTok{])}
-    
-\NormalTok{    promcomp_results_paov <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(promcomp_results_paov,}
-\NormalTok{                                   promcomp_iter_res_paov)}
-    
-    \CommentTok{# high comps}
-\NormalTok{    highcomp.df_permanova <-}\StringTok{ }\KeywordTok{adonis}\NormalTok{(scent.highcomp }\OperatorTok{~}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{colony }\OperatorTok{+}\StringTok{ }\NormalTok{colony}\OperatorTok{:}\NormalTok{family, }
-                                    \DataTypeTok{data =}\NormalTok{ scent_factors.permute, }
-                                    \DataTypeTok{permutations =} \DecValTok{9999}\NormalTok{) }
-\NormalTok{    highcomp.df_hetgeneity <-}\StringTok{ }\KeywordTok{anova}\NormalTok{(}\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent.highcomp), scent_factors.permute}\OperatorTok{$}\NormalTok{colony)) }
-    
-\NormalTok{    highcomp_iter_res_paov <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(}\DataTypeTok{R2_age =}\NormalTok{ highcomp.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{1}\NormalTok{],}
-                                    \DataTypeTok{R2_colony =}\NormalTok{ highcomp.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{2}\NormalTok{],}
-                                    \DataTypeTok{R2_famcol =}\NormalTok{ highcomp.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{3}\NormalTok{],}
-                                    \DataTypeTok{R2_residual =}\NormalTok{ highcomp.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{4}\NormalTok{],}
-                                    \DataTypeTok{F_Het =}\NormalTok{ highcomp.df_hetgeneity}\OperatorTok{$}\StringTok{`}\DataTypeTok{F value}\StringTok{`}\NormalTok{[}\DecValTok{1}\NormalTok{],}
-                                    \DataTypeTok{p_Het =}\NormalTok{ highcomp.df_hetgeneity}\OperatorTok{$}\StringTok{`}\DataTypeTok{Pr(>F)}\StringTok{`}\NormalTok{[}\DecValTok{1}\NormalTok{])}
-    
-\NormalTok{    highcomp_results_paov <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(highcomp_results_paov,}
-\NormalTok{                                   highcomp_iter_res_paov)}
-    \CommentTok{# SIMPER}
-\NormalTok{    simper.df_permanova <-}\StringTok{ }\KeywordTok{adonis}\NormalTok{(scent.simper.btrap }\OperatorTok{~}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{colony }\OperatorTok{+}\StringTok{ }\NormalTok{colony}\OperatorTok{:}\NormalTok{family, }
-                                  \DataTypeTok{data =}\NormalTok{ scent_factors.permute, }
-                                  \DataTypeTok{permutations =} \DecValTok{9999}\NormalTok{) }
-\NormalTok{    simper.df_hetgeneity <-}\StringTok{ }\KeywordTok{anova}\NormalTok{(}\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent.simper.btrap), scent_factors.permute}\OperatorTok{$}\NormalTok{colony)) }
-    
-\NormalTok{    simper_iter_res_paov <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(}\DataTypeTok{R2_age =}\NormalTok{ simper.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{1}\NormalTok{],}
-                                  \DataTypeTok{R2_colony =}\NormalTok{ simper.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{2}\NormalTok{],}
-                                  \DataTypeTok{R2_famcol =}\NormalTok{ simper.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{3}\NormalTok{],}
-                                  \DataTypeTok{R2_residual =}\NormalTok{ simper.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{4}\NormalTok{],}
-                                  \DataTypeTok{F_Het =}\NormalTok{ simper.df_hetgeneity}\OperatorTok{$}\StringTok{`}\DataTypeTok{F value}\StringTok{`}\NormalTok{[}\DecValTok{1}\NormalTok{],}
-                                  \DataTypeTok{p_Het =}\NormalTok{ simper.df_hetgeneity}\OperatorTok{$}\StringTok{`}\DataTypeTok{Pr(>F)}\StringTok{`}\NormalTok{[}\DecValTok{1}\NormalTok{])}
-    
-\NormalTok{    simper_results_paov <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(simper_results_paov,}
-\NormalTok{                                 simper_iter_res_paov)}
-    \CommentTok{#---------------------------------------}
+    \CommentTok{# create index column for meta data frame}
+\NormalTok{    scent_factors <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(scent_factors, }
+        \DataTypeTok{SampleIndex =} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(}\KeywordTok{rownames}\NormalTok{(scent_factors)))}
     
     
-    \CommentTok{# # pack all this in a list to be later on stored in a list that can be saved again}
-    \CommentTok{# create name giving the iteration step}
-\NormalTok{    iteration_count <-}\StringTok{ }\KeywordTok{paste0}\NormalTok{(}\StringTok{"iter_"}\NormalTok{, i)}
+    \CommentTok{# create data.frame to track PERMANOVA}
+    \CommentTok{# results over repeated tests}
+\NormalTok{    nonsubset_results_paov <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{R2_age =} \KeywordTok{double}\NormalTok{(), }
+        \DataTypeTok{p_colfam =} \KeywordTok{double}\NormalTok{(), }\DataTypeTok{R2_residual =} \KeywordTok{double}\NormalTok{(), }
+        \DataTypeTok{F_Het =} \KeywordTok{double}\NormalTok{(), }\DataTypeTok{p_Het =} \KeywordTok{double}\NormalTok{())}
+\NormalTok{    promcomp_results_paov <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{R2_age =} \KeywordTok{double}\NormalTok{(), }
+        \DataTypeTok{p_colfam =} \KeywordTok{double}\NormalTok{(), }\DataTypeTok{R2_residual =} \KeywordTok{double}\NormalTok{(), }
+        \DataTypeTok{F_Het =} \KeywordTok{double}\NormalTok{(), }\DataTypeTok{p_Het =} \KeywordTok{double}\NormalTok{())}
+\NormalTok{    highcomp_results_paov <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{R2_age =} \KeywordTok{double}\NormalTok{(), }
+        \DataTypeTok{p_colfam =} \KeywordTok{double}\NormalTok{(), }\DataTypeTok{R2_residual =} \KeywordTok{double}\NormalTok{(), }
+        \DataTypeTok{F_Het =} \KeywordTok{double}\NormalTok{(), }\DataTypeTok{p_Het =} \KeywordTok{double}\NormalTok{())}
+\NormalTok{    simper_results_paov <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{R2_age =} \KeywordTok{double}\NormalTok{(), }
+        \DataTypeTok{p_colfam =} \KeywordTok{double}\NormalTok{(), }\DataTypeTok{R2_residual =} \KeywordTok{double}\NormalTok{(), }
+        \DataTypeTok{F_Het =} \KeywordTok{double}\NormalTok{(), }\DataTypeTok{p_Het =} \KeywordTok{double}\NormalTok{())}
     
-    \CommentTok{# create list that stores relevant workspace elements for an iteration step}
-\NormalTok{    iter_objects <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{scent.permute =}\NormalTok{ scent.permute,}
-                         \DataTypeTok{scent_factors.permute =}\NormalTok{ scent_factors.permute,}
-                         \DataTypeTok{scent.promcomp =}\NormalTok{ scent.promcomp,}
-                         \DataTypeTok{scent.highcomp =}\NormalTok{ scent.highcomp,}
-                         \DataTypeTok{sim =}\NormalTok{ sim,}
-                         \DataTypeTok{scent.simper.btrap =}\NormalTok{ scent.simper.btrap,}
-                         \DataTypeTok{scent_nmds_regular.obj =}\NormalTok{ scent_nmds_regular.obj,}
-                         \DataTypeTok{scent_nmds_count.obj =}\NormalTok{ scent_nmds_count.obj,}
-                         \DataTypeTok{scent_nmds_add.obj =}\NormalTok{ scent_nmds_add.obj,}
-                         \DataTypeTok{scent_nmds_simper.obj =}\NormalTok{ scent_nmds_simper.obj,}
-                         \DataTypeTok{scent_nmds_regular =}\NormalTok{ scent_nmds_regular,}
-                         \DataTypeTok{scent_nmds_count =}\NormalTok{ scent_nmds_count,}
-                         \DataTypeTok{scent_nmds_add =}\NormalTok{ scent_nmds_add,}
-                         \DataTypeTok{scent_nmds_simper =}\NormalTok{ scent_nmds_simper,}
-                         \DataTypeTok{promcomp.df_permanova =}\NormalTok{ promcomp.df_permanova,}
-                         \DataTypeTok{promcomp.df_hetgeneity =}\NormalTok{ promcomp.df_hetgeneity,}
-                         \DataTypeTok{highcomp.df_permanova =}\NormalTok{ highcomp.df_permanova,}
-                         \DataTypeTok{highcomp.df_hetgeneity =}\NormalTok{ highcomp.df_permanova,}
-                         \DataTypeTok{simper.df_permanova =}\NormalTok{ simper.df_permanova,}
-                         \DataTypeTok{simper.df_hetgeneity =}\NormalTok{ simper.df_hetgeneity)}
+    \CommentTok{# create list to store created objects in}
+    \CommentTok{# an iteration}
+\NormalTok{    iter_object_container <-}\StringTok{ }\KeywordTok{list}\NormalTok{()}
     
-    \CommentTok{# save everything as a list in a container list, that stores }
-    \CommentTok{# information/elements of all iteration steps}
-\NormalTok{    iter_object_container[[i]] <-}\StringTok{ }\NormalTok{iter_objects}
-    \KeywordTok{names}\NormalTok{(iter_object_container)[i] <-}\StringTok{ }\NormalTok{iteration_count}
+    \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{btrap.iterations) \{}
+        
+        
+        \CommentTok{# create data.frame subsets (colony}
+        \CommentTok{# subset) by indexing the meta data.frame}
+\NormalTok{        scent.f.ssb.m <-}\StringTok{ }\NormalTok{scent_factors[scent_factors}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ }
+\StringTok{            "SSB_1"}\NormalTok{, ]}
+\NormalTok{        scent.f.fwb.m <-}\StringTok{ }\NormalTok{scent_factors[scent_factors}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ }
+\StringTok{            "FWB_1"}\NormalTok{, ]}
+\NormalTok{        scent.f.ssb.p <-}\StringTok{ }\NormalTok{scent_factors[scent_factors}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ }
+\StringTok{            "SSB_2"}\NormalTok{, ]}
+\NormalTok{        scent.f.fwb.p <-}\StringTok{ }\NormalTok{scent_factors[scent_factors}\OperatorTok{$}\NormalTok{BeachAge }\OperatorTok{==}\StringTok{ }
+\StringTok{            "FWB_2"}\NormalTok{, ]}
+        
+        \CommentTok{# int vector of row index number of}
+        \CommentTok{# permuted scent.ssb data.frame row}
+        \CommentTok{# numbers will be used to create a}
+        \CommentTok{# permuted data.frame of evenly}
+        \CommentTok{# distributed draws of individuals}
+\NormalTok{        permute_rows_ssb_m <-}\StringTok{ }\KeywordTok{sample}\NormalTok{(scent.f.ssb.m}\OperatorTok{$}\NormalTok{SampleIndex, }
+\NormalTok{            df.permutations, }\DataTypeTok{replace =}\NormalTok{ T)}
+\NormalTok{        permute_rows_fwb_m <-}\StringTok{ }\KeywordTok{sample}\NormalTok{(scent.f.fwb.m}\OperatorTok{$}\NormalTok{SampleIndex, }
+\NormalTok{            df.permutations, }\DataTypeTok{replace =}\NormalTok{ T)}
+\NormalTok{        permute_rows_ssb_p <-}\StringTok{ }\KeywordTok{sample}\NormalTok{(scent.f.ssb.p}\OperatorTok{$}\NormalTok{SampleIndex, }
+\NormalTok{            df.permutations, }\DataTypeTok{replace =}\NormalTok{ T)}
+\NormalTok{        permute_rows_fwb_p <-}\StringTok{ }\KeywordTok{sample}\NormalTok{(scent.f.fwb.p}\OperatorTok{$}\NormalTok{SampleIndex, }
+\NormalTok{            df.permutations, }\DataTypeTok{replace =}\NormalTok{ T)}
+        
+        \CommentTok{# create overall index number that can be}
+        \CommentTok{# used to index data.frame(scent): index}
+        \CommentTok{# corresponds to correct individual}
+\NormalTok{        perm_index_all <-}\StringTok{ }\KeywordTok{c}\NormalTok{(permute_rows_ssb_m, }
+\NormalTok{            permute_rows_fwb_m, permute_rows_ssb_p, }
+\NormalTok{            permute_rows_fwb_p)}
+        
+        \CommentTok{# create new data.frame with indeces}
+        \CommentTok{# found in permutation results vector}
+        \CommentTok{# perm_index_all}
+\NormalTok{        scent.permute <-}\StringTok{ }\NormalTok{scent[perm_index_all, }
+\NormalTok{            ]}
+\NormalTok{        scent_factors.permute <-}\StringTok{ }\NormalTok{scent_factors[perm_index_all, }
+\NormalTok{            ]}
+        \CommentTok{# rownames(scent.permute) ==}
+        \CommentTok{# rownames(scent_factors.permute) # TRUE}
+        \CommentTok{#---------------------------------------}
+        
+        \CommentTok{# Perform analysis to find 3 subsets}
+        \CommentTok{# based on different premises with the}
+        \CommentTok{# permuted data frame.  Track 15 best}
+        \CommentTok{# performing compounds of an analysis}
+        \CommentTok{#---------------------------------------}
+        
+\NormalTok{        ## NDMS scale results count number of}
+\NormalTok{        ## peaks that are not 0 per column}
+\NormalTok{        peak_count <-}\StringTok{ }\KeywordTok{as.vector}\NormalTok{(}\KeywordTok{apply}\NormalTok{(scent.permute, }
+            \DecValTok{2}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\KeywordTok{length}\NormalTok{(x[x }\OperatorTok{>}\StringTok{ }\DecValTok{0}\NormalTok{])))}
+        
+\NormalTok{        ## add peaks in a column that are not 0 to}
+\NormalTok{        ## estimate highest concentration peak sum}
+\NormalTok{        peak_add <-}\StringTok{ }\KeywordTok{as.vector}\NormalTok{(}\KeywordTok{apply}\NormalTok{(scent.permute, }
+            \DecValTok{2}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\KeywordTok{sum}\NormalTok{(x)))}
+        
+\NormalTok{        ## create dataframe with same name}
+\NormalTok{        ## properties as scent.RData}
+\NormalTok{        compound_subset <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{name =} \KeywordTok{colnames}\NormalTok{(scent.permute), }
+\NormalTok{            peak_count, peak_add)}
+        
+\NormalTok{        ## sort data frame for most prominent}
+\NormalTok{        ## compounds over all samples}
+\NormalTok{        most_abundant <-}\StringTok{ }\NormalTok{compound_subset }\OperatorTok{%>%}\StringTok{ }
+\StringTok{            }\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(peak_count))}
+        
+\NormalTok{        ## shorten scent matrix to only the 15}
+\NormalTok{        ## most abundant compounds}
+\NormalTok{        scent.promcomp <-}\StringTok{ }\NormalTok{scent.permute[}\KeywordTok{colnames}\NormalTok{(scent.permute) }\OperatorTok{%in%}\StringTok{ }
+\StringTok{            }\NormalTok{most_abundant}\OperatorTok{$}\NormalTok{name[}\DecValTok{1}\OperatorTok{:}\DecValTok{15}\NormalTok{]]}
+        
+\NormalTok{        ## sort data frame for most highly}
+\NormalTok{        ## concentrated compounds over all samples}
+\NormalTok{        most_concentration <-}\StringTok{ }\NormalTok{compound_subset }\OperatorTok{%>%}\StringTok{ }
+\StringTok{            }\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(peak_add))}
+        
+\NormalTok{        ## shorten scent matrix to only the 15}
+\NormalTok{        ## most abundant compounds}
+\NormalTok{        scent.highcomp <-}\StringTok{ }\NormalTok{scent.permute[}\KeywordTok{colnames}\NormalTok{(scent.permute) }\OperatorTok{%in%}\StringTok{ }
+\StringTok{            }\NormalTok{most_concentration}\OperatorTok{$}\NormalTok{name[}\DecValTok{1}\OperatorTok{:}\DecValTok{15}\NormalTok{]]}
+        
+\NormalTok{        ## simper simper analysis and results}
+\NormalTok{        ## array}
+\NormalTok{        sim <-}\StringTok{ }\KeywordTok{with}\NormalTok{(scent_factors.permute, }
+            \KeywordTok{simper}\NormalTok{(scent.permute, colony))}
+\NormalTok{        best.compounds.simper.btrap <-}\StringTok{ }\KeywordTok{summary}\NormalTok{(sim)[[}\DecValTok{1}\NormalTok{]]}
+        \CommentTok{# filter 15 compounds that contribute}
+        \CommentTok{# most towards dissimilarity of}
+        \CommentTok{# individuals}
+\NormalTok{        simper_comps <-}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{rownames}\NormalTok{(best.compounds.simper.btrap))}
+\NormalTok{        best_comps <-}\StringTok{ }\NormalTok{simper_comps[}\DecValTok{1}\OperatorTok{:}\DecValTok{15}\NormalTok{]}
+        \CommentTok{# subset peak data matrix \{scent\}}
+\NormalTok{        scent.simper.btrap <-}\StringTok{ }\NormalTok{scent.permute[, }
+            \KeywordTok{which}\NormalTok{(}\KeywordTok{colnames}\NormalTok{(scent.permute) }\OperatorTok{%in%}\StringTok{ }
+\StringTok{                }\KeywordTok{as.character}\NormalTok{(best_comps))]}
+        \CommentTok{#---------------------------------------}
+        
+        \CommentTok{# Take 15 identified compounds and limit}
+        \CommentTok{# nMDS of the permuted data frame}
+        \CommentTok{# (scent.permute) to only those compounds}
+        
+        \CommentTok{#---------------------------------------}
+        
+        \CommentTok{# bray-curtis similarity}
+\NormalTok{        scent_nmds_regular.obj <-}\StringTok{ }\NormalTok{vegan}\OperatorTok{::}\KeywordTok{metaMDS}\NormalTok{(}\DataTypeTok{comm =}\NormalTok{ scent.permute, }
+            \DataTypeTok{k =} \DecValTok{2}\NormalTok{, }\DataTypeTok{try =}\NormalTok{ df.permutations, }
+            \DataTypeTok{distance =} \StringTok{"bray"}\NormalTok{)}
+\NormalTok{        scent_nmds_count.obj <-}\StringTok{ }\NormalTok{vegan}\OperatorTok{::}\KeywordTok{metaMDS}\NormalTok{(}\DataTypeTok{comm =}\NormalTok{ scent.promcomp, }
+            \DataTypeTok{k =} \DecValTok{2}\NormalTok{, }\DataTypeTok{try =}\NormalTok{ df.permutations, }
+            \DataTypeTok{distance =} \StringTok{"bray"}\NormalTok{)}
+\NormalTok{        scent_nmds_add.obj <-}\StringTok{ }\NormalTok{vegan}\OperatorTok{::}\KeywordTok{metaMDS}\NormalTok{(}\DataTypeTok{comm =}\NormalTok{ scent.highcomp, }
+            \DataTypeTok{k =} \DecValTok{2}\NormalTok{, }\DataTypeTok{try =}\NormalTok{ df.permutations, }
+            \DataTypeTok{distance =} \StringTok{"bray"}\NormalTok{)}
+\NormalTok{        scent_nmds_simper.obj <-}\StringTok{ }\NormalTok{vegan}\OperatorTok{::}\KeywordTok{metaMDS}\NormalTok{(}\DataTypeTok{comm =}\NormalTok{ scent.simper.btrap, }
+            \DataTypeTok{k =} \DecValTok{2}\NormalTok{, }\DataTypeTok{try =}\NormalTok{ df.permutations, }
+            \DataTypeTok{distance =} \StringTok{"bray"}\NormalTok{)}
+        
+\NormalTok{        ## get x and y coordinates}
+\NormalTok{        scent_nmds_regular <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(scent_nmds_regular.obj[[}\StringTok{"points"}\NormalTok{]])}
+\NormalTok{        scent_nmds_count <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(scent_nmds_count.obj[[}\StringTok{"points"}\NormalTok{]])}
+\NormalTok{        scent_nmds_add <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(scent_nmds_add.obj[[}\StringTok{"points"}\NormalTok{]])}
+\NormalTok{        scent_nmds_simper <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(scent_nmds_simper.obj[[}\StringTok{"points"}\NormalTok{]])}
+        
+\NormalTok{        ## add the colony as a factor to each}
+\NormalTok{        ## sample}
+\NormalTok{        scent_nmds <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{MDS1r =}\NormalTok{ scent_nmds_regular[[}\StringTok{"MDS1"}\NormalTok{]], }
+            \DataTypeTok{MDS2r =}\NormalTok{ scent_nmds_regular[[}\StringTok{"MDS2"}\NormalTok{]], }
+            \DataTypeTok{MDS1c =}\NormalTok{ scent_nmds_count[[}\StringTok{"MDS1"}\NormalTok{]], }
+            \DataTypeTok{MDS2c =}\NormalTok{ scent_nmds_count[[}\StringTok{"MDS2"}\NormalTok{]], }
+            \DataTypeTok{MDS1a =}\NormalTok{ scent_nmds_add[[}\StringTok{"MDS1"}\NormalTok{]], }
+            \DataTypeTok{MDS2a =}\NormalTok{ scent_nmds_add[[}\StringTok{"MDS2"}\NormalTok{]], }
+            \DataTypeTok{MDS1s =}\NormalTok{ scent_nmds_simper[[}\StringTok{"MDS1"}\NormalTok{]], }
+            \DataTypeTok{MDS2s =}\NormalTok{ scent_nmds_simper[[}\StringTok{"MDS2"}\NormalTok{]], }
+            \DataTypeTok{age =}\NormalTok{ scent_factors.permute[[}\StringTok{"age"}\NormalTok{]], }
+            \DataTypeTok{colony =}\NormalTok{ scent_factors.permute[[}\StringTok{"colony"}\NormalTok{]], }
+            \DataTypeTok{family =}\NormalTok{ scent_factors.permute[[}\StringTok{"family"}\NormalTok{]], }
+            \DataTypeTok{BeachAge =}\NormalTok{ scent_factors.permute[[}\StringTok{"BeachAge"}\NormalTok{]])}
+        \CommentTok{#---------------------------------------}
+        
+        \CommentTok{# Perform PERMANOVA on distance matrix}
+        \CommentTok{# based limited scent compounds data}
+        \CommentTok{#---------------------------------------}
+        
+        \CommentTok{# not subsetted}
+\NormalTok{        nonsubset.df_permanova <-}\StringTok{ }\KeywordTok{adonis}\NormalTok{(scent.permute }\OperatorTok{~}\StringTok{ }
+\StringTok{            }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{colony }\OperatorTok{+}\StringTok{ }\NormalTok{colony}\OperatorTok{:}\NormalTok{family, }
+            \DataTypeTok{data =}\NormalTok{ scent_factors.permute, }
+            \DataTypeTok{permutations =} \DecValTok{9999}\NormalTok{)}
+\NormalTok{        nonsubset.df_hetgeneity <-}\StringTok{ }\KeywordTok{anova}\NormalTok{(}\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent.permute), }
+\NormalTok{            scent_factors.permute}\OperatorTok{$}\NormalTok{colony))}
+        
+        \CommentTok{# track important values of statistical}
+        \CommentTok{# analysis in this run}
+\NormalTok{        nonsubset_iter_res_paov <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(}\DataTypeTok{R2_age =}\NormalTok{ nonsubset.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{1}\NormalTok{], }
+            \DataTypeTok{R2_colony =}\NormalTok{ nonsubset.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{2}\NormalTok{], }
+            \DataTypeTok{R2_famcol =}\NormalTok{ nonsubset.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{3}\NormalTok{], }
+            \DataTypeTok{R2_residual =}\NormalTok{ nonsubset.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{4}\NormalTok{], }
+            \DataTypeTok{F_Het =}\NormalTok{ nonsubset.df_hetgeneity}\OperatorTok{$}\StringTok{`}\DataTypeTok{F value}\StringTok{`}\NormalTok{[}\DecValTok{1}\NormalTok{], }
+            \DataTypeTok{p_Het =}\NormalTok{ nonsubset.df_hetgeneity}\OperatorTok{$}\StringTok{`}\DataTypeTok{Pr(>F)}\StringTok{`}\NormalTok{[}\DecValTok{1}\NormalTok{])}
+        
+        \CommentTok{# bind run values to track changes over}
+        \CommentTok{# iterations in the for-loop}
+\NormalTok{        nonsubset_results_paov <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(nonsubset_results_paov, }
+\NormalTok{            nonsubset_iter_res_paov)}
+        
+        \CommentTok{# prom comps}
+\NormalTok{        promcomp.df_permanova <-}\StringTok{ }\KeywordTok{adonis}\NormalTok{(scent.promcomp }\OperatorTok{~}\StringTok{ }
+\StringTok{            }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{colony }\OperatorTok{+}\StringTok{ }\NormalTok{colony}\OperatorTok{:}\NormalTok{family, }
+            \DataTypeTok{data =}\NormalTok{ scent_factors.permute, }
+            \DataTypeTok{permutations =} \DecValTok{9999}\NormalTok{)}
+\NormalTok{        promcomp.df_hetgeneity <-}\StringTok{ }\KeywordTok{anova}\NormalTok{(}\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent.promcomp), }
+\NormalTok{            scent_factors.permute}\OperatorTok{$}\NormalTok{colony))}
+        
+\NormalTok{        promcomp_iter_res_paov <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(}\DataTypeTok{R2_age =}\NormalTok{ promcomp.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{1}\NormalTok{], }
+            \DataTypeTok{R2_colony =}\NormalTok{ promcomp.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{2}\NormalTok{], }
+            \DataTypeTok{R2_famcol =}\NormalTok{ promcomp.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{3}\NormalTok{], }
+            \DataTypeTok{R2_residual =}\NormalTok{ promcomp.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{4}\NormalTok{], }
+            \DataTypeTok{F_Het =}\NormalTok{ promcomp.df_hetgeneity}\OperatorTok{$}\StringTok{`}\DataTypeTok{F value}\StringTok{`}\NormalTok{[}\DecValTok{1}\NormalTok{], }
+            \DataTypeTok{p_Het =}\NormalTok{ promcomp.df_hetgeneity}\OperatorTok{$}\StringTok{`}\DataTypeTok{Pr(>F)}\StringTok{`}\NormalTok{[}\DecValTok{1}\NormalTok{])}
+        
+\NormalTok{        promcomp_results_paov <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(promcomp_results_paov, }
+\NormalTok{            promcomp_iter_res_paov)}
+        
+        \CommentTok{# high comps}
+\NormalTok{        highcomp.df_permanova <-}\StringTok{ }\KeywordTok{adonis}\NormalTok{(scent.highcomp }\OperatorTok{~}\StringTok{ }
+\StringTok{            }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{colony }\OperatorTok{+}\StringTok{ }\NormalTok{colony}\OperatorTok{:}\NormalTok{family, }
+            \DataTypeTok{data =}\NormalTok{ scent_factors.permute, }
+            \DataTypeTok{permutations =} \DecValTok{9999}\NormalTok{)}
+\NormalTok{        highcomp.df_hetgeneity <-}\StringTok{ }\KeywordTok{anova}\NormalTok{(}\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent.highcomp), }
+\NormalTok{            scent_factors.permute}\OperatorTok{$}\NormalTok{colony))}
+        
+\NormalTok{        highcomp_iter_res_paov <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(}\DataTypeTok{R2_age =}\NormalTok{ highcomp.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{1}\NormalTok{], }
+            \DataTypeTok{R2_colony =}\NormalTok{ highcomp.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{2}\NormalTok{], }
+            \DataTypeTok{R2_famcol =}\NormalTok{ highcomp.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{3}\NormalTok{], }
+            \DataTypeTok{R2_residual =}\NormalTok{ highcomp.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{4}\NormalTok{], }
+            \DataTypeTok{F_Het =}\NormalTok{ highcomp.df_hetgeneity}\OperatorTok{$}\StringTok{`}\DataTypeTok{F value}\StringTok{`}\NormalTok{[}\DecValTok{1}\NormalTok{], }
+            \DataTypeTok{p_Het =}\NormalTok{ highcomp.df_hetgeneity}\OperatorTok{$}\StringTok{`}\DataTypeTok{Pr(>F)}\StringTok{`}\NormalTok{[}\DecValTok{1}\NormalTok{])}
+        
+\NormalTok{        highcomp_results_paov <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(highcomp_results_paov, }
+\NormalTok{            highcomp_iter_res_paov)}
+        \CommentTok{# SIMPER}
+\NormalTok{        simper.df_permanova <-}\StringTok{ }\KeywordTok{adonis}\NormalTok{(scent.simper.btrap }\OperatorTok{~}\StringTok{ }
+\StringTok{            }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{colony }\OperatorTok{+}\StringTok{ }\NormalTok{colony}\OperatorTok{:}\NormalTok{family, }
+            \DataTypeTok{data =}\NormalTok{ scent_factors.permute, }
+            \DataTypeTok{permutations =} \DecValTok{9999}\NormalTok{)}
+\NormalTok{        simper.df_hetgeneity <-}\StringTok{ }\KeywordTok{anova}\NormalTok{(}\KeywordTok{betadisper}\NormalTok{(}\KeywordTok{vegdist}\NormalTok{(scent.simper.btrap), }
+\NormalTok{            scent_factors.permute}\OperatorTok{$}\NormalTok{colony))}
+        
+\NormalTok{        simper_iter_res_paov <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(}\DataTypeTok{R2_age =}\NormalTok{ simper.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{1}\NormalTok{], }
+            \DataTypeTok{R2_colony =}\NormalTok{ simper.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{2}\NormalTok{], }
+            \DataTypeTok{R2_famcol =}\NormalTok{ simper.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{3}\NormalTok{], }
+            \DataTypeTok{R2_residual =}\NormalTok{ simper.df_permanova}\OperatorTok{$}\NormalTok{aov.tab}\OperatorTok{$}\NormalTok{R2[}\DecValTok{4}\NormalTok{], }
+            \DataTypeTok{F_Het =}\NormalTok{ simper.df_hetgeneity}\OperatorTok{$}\StringTok{`}\DataTypeTok{F value}\StringTok{`}\NormalTok{[}\DecValTok{1}\NormalTok{], }
+            \DataTypeTok{p_Het =}\NormalTok{ simper.df_hetgeneity}\OperatorTok{$}\StringTok{`}\DataTypeTok{Pr(>F)}\StringTok{`}\NormalTok{[}\DecValTok{1}\NormalTok{])}
+        
+\NormalTok{        simper_results_paov <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(simper_results_paov, }
+\NormalTok{            simper_iter_res_paov)}
+        \CommentTok{#---------------------------------------}
+        
+        
+        \CommentTok{# # pack all this in a list to be later}
+        \CommentTok{# on stored in a list that can be saved}
+        \CommentTok{# again create name giving the iteration}
+        \CommentTok{# step}
+\NormalTok{        iteration_count <-}\StringTok{ }\KeywordTok{paste0}\NormalTok{(}\StringTok{"iter_"}\NormalTok{, }
+\NormalTok{            i)}
+        
+        \CommentTok{# create list that stores relevant}
+        \CommentTok{# workspace elements for an iteration}
+        \CommentTok{# step}
+\NormalTok{        iter_objects <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{scent.permute =}\NormalTok{ scent.permute, }
+            \DataTypeTok{scent_factors.permute =}\NormalTok{ scent_factors.permute, }
+            \DataTypeTok{scent.promcomp =}\NormalTok{ scent.promcomp, }
+            \DataTypeTok{scent.highcomp =}\NormalTok{ scent.highcomp, }
+            \DataTypeTok{sim =}\NormalTok{ sim, }\DataTypeTok{scent.simper.btrap =}\NormalTok{ scent.simper.btrap, }
+            \DataTypeTok{scent_nmds_regular.obj =}\NormalTok{ scent_nmds_regular.obj, }
+            \DataTypeTok{scent_nmds_count.obj =}\NormalTok{ scent_nmds_count.obj, }
+            \DataTypeTok{scent_nmds_add.obj =}\NormalTok{ scent_nmds_add.obj, }
+            \DataTypeTok{scent_nmds_simper.obj =}\NormalTok{ scent_nmds_simper.obj, }
+            \DataTypeTok{scent_nmds_regular =}\NormalTok{ scent_nmds_regular, }
+            \DataTypeTok{scent_nmds_count =}\NormalTok{ scent_nmds_count, }
+            \DataTypeTok{scent_nmds_add =}\NormalTok{ scent_nmds_add, }
+            \DataTypeTok{scent_nmds_simper =}\NormalTok{ scent_nmds_simper, }
+            \DataTypeTok{promcomp.df_permanova =}\NormalTok{ promcomp.df_permanova, }
+            \DataTypeTok{promcomp.df_hetgeneity =}\NormalTok{ promcomp.df_hetgeneity, }
+            \DataTypeTok{highcomp.df_permanova =}\NormalTok{ highcomp.df_permanova, }
+            \DataTypeTok{highcomp.df_hetgeneity =}\NormalTok{ highcomp.df_permanova, }
+            \DataTypeTok{simper.df_permanova =}\NormalTok{ simper.df_permanova, }
+            \DataTypeTok{simper.df_hetgeneity =}\NormalTok{ simper.df_hetgeneity)}
+        
+        \CommentTok{# save everything as a list in a}
+        \CommentTok{# container list, that stores}
+        \CommentTok{# information/elements of all iteration}
+        \CommentTok{# steps}
+\NormalTok{        iter_object_container[[i]] <-}\StringTok{ }\NormalTok{iter_objects}
+        \KeywordTok{names}\NormalTok{(iter_object_container)[i] <-}\StringTok{ }\NormalTok{iteration_count}
+        
+\NormalTok{    \}  }\CommentTok{# end i}
     
-\NormalTok{  \} }\CommentTok{# end i}
-  
-\NormalTok{  paov_r2_results <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{regular =}\NormalTok{ nonsubset_results_paov,}
-                          \DataTypeTok{promcomp =}\NormalTok{ promcomp_results_paov,}
-                          \DataTypeTok{highcomp =}\NormalTok{ highcomp_results_paov,}
-                          \DataTypeTok{simper_res =}\NormalTok{ simper_results_paov)}
-  \KeywordTok{return}\NormalTok{(}\KeywordTok{list}\NormalTok{(}\DataTypeTok{paov_r2_results =}\NormalTok{ paov_r2_results, }
-              \DataTypeTok{iter_object_container =}\NormalTok{ iter_object_container))}
-\NormalTok{\} }\CommentTok{# end function}
+\NormalTok{    paov_r2_results <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{regular =}\NormalTok{ nonsubset_results_paov, }
+        \DataTypeTok{promcomp =}\NormalTok{ promcomp_results_paov, }
+        \DataTypeTok{highcomp =}\NormalTok{ highcomp_results_paov, }
+        \DataTypeTok{simper_res =}\NormalTok{ simper_results_paov)}
+    \KeywordTok{return}\NormalTok{(}\KeywordTok{list}\NormalTok{(}\DataTypeTok{paov_r2_results =}\NormalTok{ paov_r2_results, }
+        \DataTypeTok{iter_object_container =}\NormalTok{ iter_object_container))}
+\NormalTok{\}  }\CommentTok{# end function}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1406,10 +1564,11 @@ Effect size estimate plot
 ## [25] xfun_0.5         pkgconfig_2.0.2  mgcv_1.8-27      htmltools_0.3.6 
 ## [29] tidyselect_0.2.5 crayon_1.3.4     withr_2.1.2      MASS_7.3-51.1   
 ## [33] grid_3.5.3       nlme_3.1-137     jsonlite_1.6     gtable_0.2.0    
-## [37] magrittr_1.5     scales_1.0.0     cli_1.0.1        stringi_1.3.1   
-## [41] xml2_1.2.0       generics_0.0.2   tools_3.5.3      glue_1.3.0      
-## [45] beeswarm_0.2.3   hms_0.4.2        parallel_3.5.3   yaml_2.2.0      
-## [49] colorspace_1.4-0 rvest_0.3.2      knitr_1.22       haven_2.1.0
+## [37] magrittr_1.5     formatR_1.7      scales_1.0.0     cli_1.0.1       
+## [41] stringi_1.3.1    xml2_1.2.0       generics_0.0.2   tools_3.5.3     
+## [45] glue_1.3.0       beeswarm_0.2.3   hms_0.4.2        parallel_3.5.3  
+## [49] yaml_2.2.0       colorspace_1.4-0 rvest_0.3.2      knitr_1.22      
+## [53] haven_2.1.0
 \end{verbatim}
 
 \end{document}
