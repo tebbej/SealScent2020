@@ -465,6 +465,9 @@ adonis(scent ~ age+colony+colony:family,
 
 # Test for heterogeneity
 anova(betadisper(vegdist(scent), peak_factors$colony))
+anova(betadisper(vegdist(scent), peak_factors$age))
+anova(betadisper(vegdist(scent), scent_nmds$BeachAge))
+
 ```
 
 ## Effect size estimate by PERMANOVA R² bootstrap
